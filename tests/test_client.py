@@ -4,7 +4,6 @@ from ncoreparser.data import URLs
 from os import path, environ
 import requests
 import pytest
-from _pytest.monkeypatch import monkeypatch
 import json
 
 
@@ -18,13 +17,27 @@ class DummyCookies:
     def clear(self):
         pass
 
-class RequestPostConError:
-    def __init__(self):
+class DummyRequestUrl:
+    def __init__(self, type):
+        self.type = type
+        if self.type == "bad":
+            self.url = URLs.LOGIN.value
+        elif self.type == "ok":
+            self.url = URLs.INDEX.value
+
+class RequestPost:
+    def __init__(self, type):
         self.cookies = DummyCookies()
+        self.type = type
 
     def post(self, *args, **kwargs):
-        raise Exception("")
+        if self.type == "exception":
+            raise Exception("")
+        else:
+            return DummyRequestUrl(self.type)
 
+    def close(self):
+        pass
 
 @pytest.fixture(scope="session", autouse=True)
 def collect_cred():
@@ -39,14 +52,17 @@ def test_credentials():
     Client(cred["username"], cred["password"])
 
 
-def test_invalid_credentials():
+def test_invalid_credentials(monkeypatch):
+    def mock_requests():
+        return RequestPost("bad")
+
+    monkeypatch.setattr(requests, "session", mock_requests)
     with pytest.raises(NcoreCredentialError):
         Client("Invalid_username", "Invalid_password")
 
 def test_connection_error(monkeypatch):
-    
     def mock_requests():
-        return RequestPostConError()
+        return RequestPost("exception")
 
     monkeypatch.setattr(requests, "session", mock_requests)
     
