@@ -7,7 +7,6 @@ import pytest
 import json
 
 
-cred = {}
 
 
 class PostDummy:
@@ -39,17 +38,19 @@ class RequestPost:
     def close(self):
         pass
 
+"""
 @pytest.fixture(scope="session", autouse=True)
 def collect_cred():
-    global cred
-    credentials = path.join(path.dirname(__file__), "cred.json")
-    with open(credentials) as fh:
-        cred = json.load(fh)
     yield
+"""
 
 
-def test_credentials():
-    Client(cred["username"], cred["password"])
+def test_credentials(monkeypatch):
+    def mock_requests():
+        return RequestPost("ok")
+
+    monkeypatch.setattr(requests, "session", mock_requests)
+    Client("username", "password")
 
 
 def test_invalid_credentials(monkeypatch):
@@ -67,4 +68,4 @@ def test_connection_error(monkeypatch):
     monkeypatch.setattr(requests, "session", mock_requests)
     
     with pytest.raises(NcoreConnectionError):
-        Client(cred["username"], cred["password"])
+        Client("username", "password")
