@@ -50,3 +50,10 @@ class URLs(Enum):
     LOGIN = "https://ncore.cc/login.php"
     ACTIVITY = "https://ncore.cc/hitnrun.php"
     TORRENTS_BASE = "https://ncore.cc/torrents.php"
+    DOWNLOAD_PATTERN = TORRENTS_BASE+"?oldal={page}" \
+                                     "&tipus={t_type}" \
+                                     "&miszerint={sort}" \
+                                     "&hogyan={seq}" \
+                                     "&mire={pattern}" \
+                                     "&miben={where}"
+    DETAIL_PATTERN = TORRENTS_BASE+"?action=details&id={id}"

@@ -1,20 +1,18 @@
 from ncoreparser.client import Client
-from ncoreparser.errors import NcoreConnectionError, NcoreCredentialError
+from ncoreparser.error import NcoreConnectionError, NcoreCredentialError
 from ncoreparser.data import URLs
-from os import path, environ
 import requests
 import pytest
-import json
-
-
 
 
 class PostDummy:
     url = URLs.INDEX.value
 
+
 class DummyCookies:
     def clear(self):
         pass
+
 
 class DummyRequestUrl:
     def __init__(self, type):
@@ -23,6 +21,7 @@ class DummyRequestUrl:
             self.url = URLs.LOGIN.value
         elif self.type == "ok":
             self.url = URLs.INDEX.value
+
 
 class RequestPost:
     def __init__(self, type):
@@ -37,6 +36,7 @@ class RequestPost:
 
     def close(self):
         pass
+
 
 """
 @pytest.fixture(scope="session", autouse=True)
@@ -61,11 +61,12 @@ def test_invalid_credentials(monkeypatch):
     with pytest.raises(NcoreCredentialError):
         Client("Invalid_username", "Invalid_password")
 
+
 def test_connection_error(monkeypatch):
     def mock_requests():
         return RequestPost("exception")
 
     monkeypatch.setattr(requests, "session", mock_requests)
-    
+
     with pytest.raises(NcoreConnectionError):
         Client("username", "password")
