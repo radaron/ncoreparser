@@ -38,6 +38,7 @@ class ParamType(Enum):
     ISO = 'iso'
     MISC = 'misc'
     MOBIL = 'mobil'
+    XXX_IMG = 'xxx_imageset'
 
 
 class ParamSeq(Enum):
@@ -57,3 +58,4 @@ class URLs(Enum):
                                      "&mire={pattern}" \
                                      "&miben={where}"
     DETAIL_PATTERN = TORRENTS_BASE+"?action=details&id={id}"
+    DOWNLOAD_LINK = "https://ncore.cc/torrents.php?action=download&id={id}&key={key}"

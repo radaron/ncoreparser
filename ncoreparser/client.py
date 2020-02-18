@@ -2,6 +2,7 @@ import requests
 from ncoreparser.data import URLs
 from ncoreparser.error import NcoreConnectionError, NcoreCredentialError
 from ncoreparser.torrent import Torrent
+from ncoreparser.constant import TORRENTS_PER_PAGE
 
 
 class Client:
@@ -21,12 +22,6 @@ class Client:
 
     def query(self, pattern, type, sort_by, sort_order, number):
         item_count = 0
-        # TODO Slice number to max 25 length groups
-        """
-        def group(lst, n):
-            for i in range(0, len(lst), n):
-            val = lst[i:i+n]
-        """
         while item_count < number:
             url = URLs.DOWNLOAD_PATTERN.value.format(page="",
                                                      t_type=type,
