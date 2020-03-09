@@ -4,3 +4,7 @@ class NcoreConnectionError(Exception):
 
 class NcoreCredentialError(Exception):
     pass
+
+
+class NcoreParserError(Exception):
+    pass

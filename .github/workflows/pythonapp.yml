@@ -27,4 +27,4 @@ jobs:
         pipenv run flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Perform tests
       run: |
-        ./run_tests.sh
+        pipenv run python -m pytest tests/
