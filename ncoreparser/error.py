@@ -8,3 +8,7 @@ class NcoreCredentialError(Exception):
 
 class NcoreParserError(Exception):
     pass
+
+
+class NcoreDownloadError(Exception):
+    pass

@@ -10,7 +10,7 @@ class ParamSort(Enum):
     LEECHERS = "leechers"
 
 
-class ParamType(Enum):
+class SearchParamType(Enum):
     XVID_HUN = 'xvid_hun'
     XVID = 'xvid'
     DVD_HUN = 'dvd_hun'
@@ -39,6 +39,14 @@ class ParamType(Enum):
     MISC = 'misc'
     MOBIL = 'mobil'
     XXX_IMG = 'xxx_imageset'
+    ALL_OWN = "all_own"
+
+
+class ParamSearchWhere(Enum):
+    NAME = "name"
+    DESCRIPTION = "leiras"
+    IMDB = "imdb"
+    LABEL = "cimke"
 
 
 class ParamSeq(Enum):
