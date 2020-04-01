@@ -10,10 +10,11 @@ from ncoreparser.data import (
 from ncoreparser.error import (
     NcoreConnectionError,
     NcoreCredentialError, 
-    NcoreDownloadError
+    NcoreDownloadError,
+    NcoreParserError
 )
 from ncoreparser.constant import TORRENTS_PER_PAGE
-from ncoreparser.parser import TorrentsPageParser
+from ncoreparser.parser import TorrentsPageParser, TorrenDetailParser, RssParser
 from ncoreparser.torrent import Torrent
 
 
@@ -21,7 +22,9 @@ class Client:
     def __init__(self):
         self._session = requests.session()
         self._session.cookies.clear()
-        self._parser = TorrentsPageParser()
+        self._page_parser = TorrentsPageParser()
+        self._detailed_parser = TorrenDetailParser()
+        self._rss_parser = RssParser()
 
     def open(self, username, password):
         try:
@@ -50,16 +53,30 @@ class Client:
                 request = self._session.get(url)
             except ConnectionError as e:
                 raise NcoreConnectionError(f"Error while searhing torrents. {e}")
-            new_torrents = [Torrent(**params) for params in self._parser.get_items(request.text)]
+            new_torrents = [Torrent(**params) for params in self._page_parser.get_items(request.text)]
             item_count += len(new_torrents)
             torrents.extend(new_torrents)
         return torrents[:number]
     
     def get_torrent(self, id):
-        pass
+        url = URLs.DETAIL_PATTERN.value.format(id=id)
+        try:
+            content = self._session.get(url)
+        except ConnectionError as e:
+            raise NcoreConnectionError(f"Error while get detailed page. Url: '{url}'. {e}")
+        params = self._detailed_parser.get_item(content.text)
+        params["id"] = id
+        return Torrent(**params)
 
     def get_by_rss(self, url):
-        pass
+        try:
+            content = self._session.get(url)
+        except ConnectionError as e:
+            raise NcoreConnectionError(f"Error while get rss. Url: '{url}'. {e}")
+
+        for id in self._rss_parser.get_ids(content.text):
+            yield self.get_torrent(id)
+
 
     def download(self, torrent, path):
         file_path, url = torrent.prepare_download(path)
@@ -75,3 +92,4 @@ class Client:
 
     def close(self):
         self._session.close()
+

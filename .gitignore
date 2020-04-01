@@ -1,3 +1,4 @@
 cred.json
 *.pyc
 __pycache__/
+client_test.py
