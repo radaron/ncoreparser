@@ -13,7 +13,8 @@ class TestClient:
         session.return_value.post.return_value.url = URLs.INDEX.value
 
         monkeypatch.setattr(requests, "session", session)
-        Client("username", "password")
+        c = Client()
+        c.open("username", "password")
 
     def test_credentials_con_error(self, monkeypatch):
         session = MagicMock()
@@ -21,7 +22,8 @@ class TestClient:
 
         monkeypatch.setattr(requests, "session", session)
         with pytest.raises(NcoreConnectionError):
-            Client("username", "password")
+            c = Client()
+            c.open("username", "password")
 
     def test_invalid_credentials(self, monkeypatch):
         session = MagicMock()
@@ -29,5 +31,6 @@ class TestClient:
         
         monkeypatch.setattr(requests, "session", session)
         with pytest.raises(NcoreCredentialError):
-            Client("Invalid_username", "Invalid_password")
+            c = Client()
+            c.open("username", "password")
         session.return_value.close.assert_called_once()
