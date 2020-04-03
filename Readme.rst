@@ -1,3 +1,6 @@
+.. image:: https://github.com/radaron/ncoreparser-python/workflows/Python%20application/badge.svg
+
+
 ***********
 Ncoreparser
 ***********
