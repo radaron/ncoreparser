@@ -28,3 +28,11 @@ jobs:
     - name: Perform tests
       run: |
         pipenv run python -m pytest tests/
+    - name: Generate wheel file
+        run:
+            pipenv run python setup.py bdist_wheel
+        uses: actions/upload-artifact@v1.0.0
+        with:
+        # Artifact name
+            name: wheel
+            path: build/
