@@ -3,10 +3,11 @@ import os
 from ncoreparser.data import (
     URLs, 
     SearchParamType, 
+    SearchParamWhere,
     ParamSort, 
-    ParamSeq, 
-    ParamSearchWhere
+    ParamSeq
 )
+
 from ncoreparser.error import (
     NcoreConnectionError,
     NcoreCredentialError, 
@@ -38,7 +39,7 @@ class Client:
             raise NcoreCredentialError(f"Error while login, check "
                                        f"credentials for user: '{username}'")
 
-    def search(self, pattern, type=SearchParamType.ALL_OWN,  where=ParamSearchWhere.NAME,
+    def search(self, pattern, type=SearchParamType.ALL_OWN,  where=SearchParamWhere.NAME,
                sort_by=ParamSort.UPLOAD, sort_order=ParamSeq.DECREASING, number=TORRENTS_PER_PAGE):
         item_count = 0
         torrents = []
@@ -73,9 +74,11 @@ class Client:
             content = self._session.get(url)
         except ConnectionError as e:
             raise NcoreConnectionError(f"Error while get rss. Url: '{url}'. {e}")
-
+        
+        torrents = []
         for id in self._rss_parser.get_ids(content.text):
-            yield self.get_torrent(id)
+            torrents.append(self.get_torrent(id))
+        return torrents
 
 
     def download(self, torrent, path):

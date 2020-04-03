@@ -11,16 +11,16 @@ class ParamSort(Enum):
 
 
 class SearchParamType(Enum):
-    XVID_HUN = 'xvid_hun'
-    XVID = 'xvid'
+    SD_HUN = 'xvid_hun'
+    SD = 'xvid'
     DVD_HUN = 'dvd_hun'
     DVD = 'dvd'
     DVD9_HUN = 'dvd9_hun'
     DVD9 = 'dvd9'
     HD_HUN = 'hd_hun'
     HD = 'hd'
-    XVIDSER_HUN = 'xvidser_hun'
-    XVIDSER = 'xvidser'
+    SDSER_HUN = 'xvidser_hun'
+    SDSER = 'xvidser'
     DVDSER_HUN = 'dvdser_hun'
     DVDSER = 'dvdser'
     HDSER_HUN = 'hdser_hun'
@@ -39,23 +39,23 @@ class SearchParamType(Enum):
     MISC = 'misc'
     MOBIL = 'mobil'
     XXX_IMG = 'xxx_imageset'
-    XXX_XVID = 'xxx_xvid'
+    XXX_SD = 'xxx_xvid'
     XXX_DVD = 'xxx_dvd'
     XXX_HD = 'xxx_hd'
     ALL_OWN = "all_own"
 
 def get_detaild_param(category, type):
     detailed = {
-            "osszes_film_xvid_hun" : SearchParamType.XVID_HUN,
-            "osszes_film_xvid" : SearchParamType.XVID,
+            "osszes_film_xvid_hun" : SearchParamType.SD_HUN,
+            "osszes_film_xvid" : SearchParamType.SD,
             "osszes_film_dvd_hun" : SearchParamType.DVD_HUN,
             "osszes_film_dvd" : SearchParamType.DVD,
             "osszes_film_dvd9_hun" : SearchParamType.DVD9_HUN,
             "osszes_film_dvd9" : SearchParamType.DVD9,
             "osszes_film_hd_hun" : SearchParamType.HD_HUN,
             "osszes_film_hd" : SearchParamType.HD,
-            "osszes_sorozat_xvidser_hun" : SearchParamType.XVIDSER_HUN,
-            "osszes_sorozat_xvidser" : SearchParamType.XVIDSER,
+            "osszes_sorozat_xvidser_hun" : SearchParamType.SDSER_HUN,
+            "osszes_sorozat_xvidser" : SearchParamType.SDSER,
             "osszes_sorozat_dvdser_hun" : SearchParamType.DVDSER_HUN,
             "osszes_sorozat_dvdser" : SearchParamType.DVDSER,
             "osszes_sorozat_hdser_hun" : SearchParamType.HDSER_HUN,
@@ -74,7 +74,7 @@ def get_detaild_param(category, type):
             "osszes_program_misc" : SearchParamType.MISC,
             "osszes_program_mobil" : SearchParamType.MOBIL,
             "osszes_xxx_xxx_imageset" : SearchParamType.XXX_IMG,
-            "osszes_xxx_xxx_xvid" : SearchParamType.XXX_XVID,
+            "osszes_xxx_xxx_xvid" : SearchParamType.XXX_SD,
             "osszes_xxx_xxx_dvd" : SearchParamType.XXX_DVD,
             "osszes_xxx_xxx_hd" : SearchParamType.XXX_HD,
     }.get(f"{category}_{type}", None)
@@ -84,7 +84,7 @@ def get_detaild_param(category, type):
     return detailed
     
 
-class ParamSearchWhere(Enum):
+class SearchParamWhere(Enum):
     NAME = "name"
     DESCRIPTION = "leiras"
     IMDB = "imdb"
