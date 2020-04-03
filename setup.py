@@ -4,13 +4,13 @@ with open("Readme.rst", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="ncoreparser-python",
+    name="ncoreparser",
     version="0.0.1",
     author="Aron Radics",
     author_email="radics.aron.jozsef@gmail.com",
     description="Package to download from ncore.cc",
     long_description=long_description,
-    long_description_content_type="text/markdown",
+    long_description_content_type="text/x-rst",
     url="https://github.com/radaron/ncoreparser-python",
     packages=setuptools.find_packages(),
     classifiers=[

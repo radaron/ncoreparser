@@ -3,4 +3,4 @@ cred.json
 __pycache__/
 build/
 dist/
-ncoreparser_python.egg-info/
+ncoreparser.egg-info/
