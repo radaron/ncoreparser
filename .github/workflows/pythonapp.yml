@@ -31,8 +31,8 @@ jobs:
     - name: Generate wheel file
         run: |
             pipenv run python setup.py bdist_wheel
+    - name: Upload artifacts
         uses: actions/upload-artifact@v1.0.0
         with:
-        # Artifact name
-            name: wheel
+            name: wheel_file
             path: build/
