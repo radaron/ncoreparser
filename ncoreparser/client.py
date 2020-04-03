@@ -55,6 +55,8 @@ class Client:
             except ConnectionError as e:
                 raise NcoreConnectionError(f"Error while searhing torrents. {e}")
             new_torrents = [Torrent(**params) for params in self._page_parser.get_items(request.text)]
+            if len(new_torrents) == 0:
+                return torrents
             item_count += len(new_torrents)
             torrents.extend(new_torrents)
         return torrents[:number]

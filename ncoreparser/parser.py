@@ -27,15 +27,16 @@ class TorrentsPageParser:
         ids_names = self.id_name_pattern.findall(data)
         dates_times = self.date_pattern.findall(data)
         sizes = self.size_pattern.findall(data)
-        if len(types) == 0 or not len(types) == len(ids_names) == len(dates_times) == len(sizes):
-            if self.not_found_pattern.search(data):
-                return None
-            raise NcoreParserError(f"Error while parse download items in {self.__class__.__name__}.")
-        ids, names = zip(*ids_names)
-        dates, times = zip(*dates_times)
-        key = self._get_key(data)
+        if len(types) != 0 and len(types) == len(ids_names) == len(dates_times) == len(sizes):
+            ids, names = zip(*ids_names)
+            dates, times = zip(*dates_times)
+            key = self._get_key(data)
+        else:
+            if not self.not_found_pattern.search(data):
+                raise NcoreParserError(f"Error while parse download items in {self.__class__.__name__}.")
         for i in range(0, len(types)):
             yield {"id": ids[i], "title": names[i], "key": key, "date": parse_datetime(dates[i], times[i]), "size": Size(sizes[i]), "type": SearchParamType(types[i])}
+
 
 class TorrenDetailParser:
     def __init__(self):

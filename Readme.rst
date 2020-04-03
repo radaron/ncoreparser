@@ -55,7 +55,7 @@ This example download Forest gump torrent file and save it to temp folder
         client.open("<username>", "<password>")
     
         
-        torrent = client.search(pattern="Forest gump", type=SearcParamType.SD_HUN, number=1, 
+        torrent = client.search(pattern="Forest gump", type=SearchParamType.SD_HUN, number=1, 
                                 sort_by=ParamSort.SEEDERS, sort_order=ParamSeq.DECREASING)[0]
         
         client.download(torrent, "/tmp")
