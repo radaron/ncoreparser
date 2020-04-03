@@ -1,4 +1,6 @@
 cred.json
 *.pyc
 __pycache__/
-client_test.py
+build/
+dist/
+ncoreparser_python.egg-info/
