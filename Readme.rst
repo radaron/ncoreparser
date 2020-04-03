@@ -18,7 +18,7 @@ At this time this package is not available from Pypi, so it is only reachable fr
 
 .. code-block:: bash
 
-   pip install git+https://github.com/radaron/ncoreparser-python
+   pip install ncoreparser
 
 Examples
 ########
