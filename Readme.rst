@@ -76,3 +76,37 @@ This example get all torrents and their informations from an ncore bookmark (rss
             print(torrent['title'], torrent['type'], torrent['size'], torrent['id'])
 
         client.close()
+   
+**Get torrents by activity**
+This example get all torrents and their informations from the Hit&run page
+
+.. code-block:: python
+
+    from ncoreparser import Client
+
+    if __name__ == "__main__":
+        client = Client()
+        client.open("<username>", "<password>")
+
+        torrents = client.get_by_activity()
+        for torrent in torrents:
+            print(torrent['title'], torrent['type'], torrent['size'], torrent['id'])
+
+        client.close()
+
+**Get recommended torrents**
+This example get all torrents and their informations from the recommended page
+
+.. code-block:: python
+
+    from ncoreparser import Client, SearchParamType
+
+    if __name__ == "__main__":
+        client = Client()
+        client.open("<username>", "<password>")
+
+        torrents = client.get_recommended(type=SearchParamType.SD_HUN)
+        for torrent in torrents:
+            print(torrent['title'], torrent['type'], torrent['size'], torrent['id'])
+
+        client.close()
