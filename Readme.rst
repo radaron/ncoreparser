@@ -14,8 +14,6 @@ This module provides python API-s to manage torrents from ncore.cc eg.: search, 
 Install
 #######
 
-At this time this package is not available from Pypi, so it is only reachable from github directly.
-
 .. code-block:: bash
 
    pip install ncoreparser
@@ -66,7 +64,7 @@ This example get all torrents and their informations from an ncore bookmark (rss
 
 .. code-block:: python
 
-    from ncoreparser import Client, SearchParamWhere, SearchParamType, ParamSort, ParamSeq
+    from ncoreparser import Client 
 
 
     if __name__ == "__main__":
