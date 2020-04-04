@@ -65,4 +65,17 @@ class RssParser:
     def get_ids(self, data):
         return self.id_pattern.findall(data)
 
+class ActivityParser:
+    def __init__(self):
+        self.action_pattern = re.compile(r'<a href=".*?" onclick="torrent\((.*?)\); return false;" title=".*?"><nobr>.*?<\/nobr><\/a>')
+
+    def get_ids(self, data):
+        return self.action_pattern.findall(data)
+        
+class RecommendedParser:
+    def __init__(self):
+        self.recommended_pattern = re.compile(r'<a href=".*?torrents.php\?action=details\&id=(.*?)" target=".*?"><img src=".*?" width=".*?" height=".*?" border=".*?" title=".*?"\/><\/a>')
+
+    def get_ids(self, data):
+        return self.recommended_pattern.findall(data)
 

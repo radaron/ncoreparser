@@ -100,6 +100,7 @@ class URLs(Enum):
     INDEX = "https://ncore.cc/index.php"
     LOGIN = "https://ncore.cc/login.php"
     ACTIVITY = "https://ncore.cc/hitnrun.php"
+    RECOMMENDED = "https://ncore.cc/recommended.php"
     TORRENTS_BASE = "https://ncore.cc/torrents.php"
     DOWNLOAD_PATTERN = TORRENTS_BASE+"?oldal={page}" \
                                      "&tipus={t_type}" \

@@ -7,16 +7,21 @@ from ncoreparser.data import (
     ParamSort, 
     ParamSeq
 )
-
 from ncoreparser.error import (
     NcoreConnectionError,
     NcoreCredentialError, 
     NcoreDownloadError,
     NcoreParserError
 )
-from ncoreparser.constant import TORRENTS_PER_PAGE
-from ncoreparser.parser import TorrentsPageParser, TorrenDetailParser, RssParser
+from ncoreparser.parser import (
+    TorrentsPageParser, 
+    TorrenDetailParser, 
+    RssParser,
+    ActivityParser,
+    RecommendedParser
+)
 from ncoreparser.torrent import Torrent
+from ncoreparser.constant import TORRENTS_PER_PAGE
 
 
 class Client:
@@ -26,6 +31,8 @@ class Client:
         self._page_parser = TorrentsPageParser()
         self._detailed_parser = TorrenDetailParser()
         self._rss_parser = RssParser()
+        self._activity_parser = ActivityParser()
+        self._recommended_parser = RecommendedParser()
 
     def open(self, username, password):
         try:
@@ -81,6 +88,26 @@ class Client:
         for id in self._rss_parser.get_ids(content.text):
             torrents.append(self.get_torrent(id))
         return torrents
+
+    def get_by_activity(self):
+        try:
+            content = self._session.get(URLs.ACTIVITY.value)
+        except ConnectionError as e:
+            raise NcoreConnectionError(f"Error while get activity. Url: '{URLs.ACTIVITY.value}'. {e}")
+        
+        torrents = []
+        for id in self._activity_parser.get_ids(content.text):
+            torrents.append(self.get_torrent(id))
+        return torrents
+    
+    def get_recommended(self, type=None):
+        try:
+            content = self._session.get(URLs.RECOMMENDED.value)
+        except ConnectionError as e:
+            raise NcoreConnectionError(f"Error while get recommended. Url: '{URLs.RECOMMENDED.value}'. {e}")
+
+        all_recommended = [self.get_torrent(id) for id in self._recommended_parser.get_ids(content.text)]
+        return [torrent for torrent in all_recommended if not type or torrent['type'] == type]
 
 
     def download(self, torrent, path):
