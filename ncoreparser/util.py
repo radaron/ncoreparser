@@ -25,14 +25,14 @@ class Size:
                 break
     
     def __str__(self):
-        return f"{self.size:.2f} {self.unit}"
+        return "{:.2f} {}".format(self.size, self.unit)
     
     def __repr__(self):
-        return f"{self.size:.2f} {self.unit}"
+        return "{:.2f} {}".format(self.size, self.unit)
     
     def __add__(self, obj):
         if not isinstance(obj, Size):
-            raise Exception(f"Error while adding different object type to {self.__class__.__name__}")
+            raise Exception("Error while adding different object type to {}".format(self.__class__.__name__))
         size = self._size + obj._size
         unit = self._unit
         for u, multiplier in self.unit_size.items():
@@ -43,7 +43,7 @@ class Size:
     
     def __iadd__(self, obj):
         if not isinstance(obj, Size):
-            raise Exception(f"Error while adding different object type to {self.__class__.__name__}")
+            raise Exception("Error while adding different object type to {}".format(self.__class__.__name__))
         self._size = self._size + obj._size
         for unit, multiplier in self.unit_size.items():
             if len(str(int(self._size/multiplier))) <= 3:

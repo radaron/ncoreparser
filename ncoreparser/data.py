@@ -77,7 +77,7 @@ def get_detaild_param(category, type):
             "osszes_xxx_xxx_xvid" : SearchParamType.XXX_SD,
             "osszes_xxx_xxx_dvd" : SearchParamType.XXX_DVD,
             "osszes_xxx_xxx_hd" : SearchParamType.XXX_HD,
-    }.get(f"{category}_{type}", None)
+    }.get("{}_{}".format(category, type), None)
 
     if detailed is None:
         raise NcoreParserError("Error while get type by detailed page.")

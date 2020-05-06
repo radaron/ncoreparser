@@ -33,4 +33,3 @@ class TestClient:
         with pytest.raises(NcoreCredentialError):
             c = Client()
             c.open("username", "password")
-        session.return_value.close.assert_called_once()

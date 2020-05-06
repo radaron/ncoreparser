@@ -39,12 +39,12 @@ class Client:
             r = self._session.post(URLs.LOGIN.value,
                                    {"nev": username, "pass": password})
         except Exception:
-            raise NcoreConnectionError(f"Error while perform post "
-                                       f"method to url '{URLs.LOGIN.value}'.")
+            raise NcoreConnectionError("Error while perform post "
+                                       "method to url '{}'.".format(URLs.LOGIN.value))
         if r.url != URLs.INDEX.value:
             self._session.close()
-            raise NcoreCredentialError(f"Error while login, check "
-                                       f"credentials for user: '{username}'")
+            raise NcoreCredentialError("Error while login, check "
+                                       "credentials for user: '{}'".format(username))
 
     def search(self, pattern, type=SearchParamType.ALL_OWN,  where=SearchParamWhere.NAME,
                sort_by=ParamSort.UPLOAD, sort_order=ParamSeq.DECREASING, number=TORRENTS_PER_PAGE):
@@ -60,7 +60,7 @@ class Client:
             try:
                 request = self._session.get(url)
             except ConnectionError as e:
-                raise NcoreConnectionError(f"Error while searhing torrents. {e}")
+                raise NcoreConnectionError("Error while searhing torrents. {}".format(e))
             new_torrents = [Torrent(**params) for params in self._page_parser.get_items(request.text)]
             if len(new_torrents) == 0:
                 return torrents
@@ -73,7 +73,7 @@ class Client:
         try:
             content = self._session.get(url)
         except ConnectionError as e:
-            raise NcoreConnectionError(f"Error while get detailed page. Url: '{url}'. {e}")
+            raise NcoreConnectionError("Error while get detailed page. Url: '{}'. {}".format(url, e))
         params = self._detailed_parser.get_item(content.text)
         params["id"] = id
         return Torrent(**params)
@@ -82,7 +82,7 @@ class Client:
         try:
             content = self._session.get(url)
         except ConnectionError as e:
-            raise NcoreConnectionError(f"Error while get rss. Url: '{url}'. {e}")
+            raise NcoreConnectionError("Error while get rss. Url: '{}'. {}".format(url, e))
         
         torrents = []
         for id in self._rss_parser.get_ids(content.text):
@@ -93,7 +93,7 @@ class Client:
         try:
             content = self._session.get(URLs.ACTIVITY.value)
         except ConnectionError as e:
-            raise NcoreConnectionError(f"Error while get activity. Url: '{URLs.ACTIVITY.value}'. {e}")
+            raise NcoreConnectionError("Error while get activity. Url: '{}'. {}".format(URLs.ACTIVITY.value, e))
         
         torrents = []
         for id in self._activity_parser.get_ids(content.text):
@@ -104,7 +104,7 @@ class Client:
         try:
             content = self._session.get(URLs.RECOMMENDED.value)
         except ConnectionError as e:
-            raise NcoreConnectionError(f"Error while get recommended. Url: '{URLs.RECOMMENDED.value}'. {e}")
+            raise NcoreConnectionError("Error while get recommended. Url: '{}'. {}".format(URLs.RECOMMENDED.value, e))
 
         all_recommended = [self.get_torrent(id) for id in self._recommended_parser.get_ids(content.text)]
         return [torrent for torrent in all_recommended if not type or torrent['type'] == type]
@@ -115,9 +115,9 @@ class Client:
         try:
             content = self._session.get(url)
         except ConnectionError as e:
-            raise NcoreConnectionError(f"Error while downloading torrent. Url: '{url}'. {e}")
+            raise NcoreConnectionError("Error while downloading torrent. Url: '{}'. {}".format(url, e))
         if os.path.exists(file_path):
-            raise NcoreDownloadError(f"Error while downloading file: '{file_path}'. It is already exists.")
+            raise NcoreDownloadError("Error while downloading file: '{}'. It is already exists.".format(file_path))
         with open(file_path, 'wb') as fh:
             fh.write(content.content)
         return file_path

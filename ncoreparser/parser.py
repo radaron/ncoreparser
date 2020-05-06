@@ -19,8 +19,8 @@ class TorrentsPageParser:
         if find:
             return find.group("key")
         else:
-            raise NcoreParserError(f"Error while read user "
-                                   f"key with pattern: {key_pattern}")
+            raise NcoreParserError("Error while read user "
+                                   "key with pattern: {}".format(key_pattern))
 
     def get_items(self, data):
         types = self.type_pattern.findall(data)
@@ -33,7 +33,7 @@ class TorrentsPageParser:
             key = self._get_key(data)
         else:
             if not self.not_found_pattern.search(data):
-                raise NcoreParserError(f"Error while parse download items in {self.__class__.__name__}.")
+                raise NcoreParserError("Error while parse download items in {}.".format(self.__class__.__name__))
         for i in range(0, len(types)):
             yield {"id": ids[i], "title": names[i], "key": key, "date": parse_datetime(dates[i], times[i]), "size": Size(sizes[i]), "type": SearchParamType(types[i])}
 
@@ -55,7 +55,7 @@ class TorrenDetailParser:
             key = TorrentsPageParser._get_key(data)
             size = Size(self.size_pattern.search(data).group("size"))
         except AttributeError as e:
-            raise NcoreParserError(f"Error while parsing by detailed page. {e}")
+            raise NcoreParserError("Error while parsing by detailed page. {}".format(e))
         return {"title": title, "key": key, "date": date, "size": size, "type": t_type}
 
 class RssParser:

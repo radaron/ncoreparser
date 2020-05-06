@@ -22,10 +22,10 @@ class Torrent:
         return self._details.keys()
 
     def __str__(self):
-        return f'<Torrent {self._details["id"]}>'
+        return "<Torrent {}>".format(self._details['id'])
 
     def __repr__(self):
-        return f'<Torrent {self._details["id"]}>'
+        return "<Torrent {}>".format(self._details['id'])
 
     def prepare_download(self, path):
         filename = self._details['title'].replace(' ', '_') + '.torrent'
