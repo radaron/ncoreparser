@@ -7,7 +7,7 @@ from ncoreparser.error import NcoreConnectionError
 class Torrent:
     def __init__(self, id, title, key, size, type, date):
         self._details = {}
-        self._details["id"] = id
+        self._details["id"] = int(id)
         self._details["title"] = title
         self._details["key"] = key
         self._details["size"] = size
