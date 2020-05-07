@@ -4,14 +4,16 @@ from ncoreparser.error import NcoreParserError
 from ncoreparser.util import parse_datetime, Size
 from ncoreparser.data import SearchParamType, get_detaild_param
 
+
 class TorrentsPageParser:
     def __init__(self):
-        self.type_pattern = re.compile(r'<a href=".*\/torrents\.php\?tipus=(.*?)"><img src=".*" class="categ_link" alt=".*" title=".*">')
+        self.type_pattern = re.compile(r'<a href=".*\/torrents\.php\?tipus=(.*?)">'
+                                       r'<img src=".*" class="categ_link" alt=".*" title=".*">')
         self.id_name_pattern = re.compile(r'<a href=".*?" onclick="torrent\(([0-9]+)\); return false;" title="(.*?)">')
         self.date_pattern = re.compile(r'<div class="box_feltoltve2">(.*?)<br>(.*?)</div>')
         self.size_pattern = re.compile(r'<div class="box_meret2">(.*?)</div>')
         self.not_found_pattern = re.compile(r'<div class="lista_mini_error">Nincs találat!</div>')
-    
+
     @staticmethod
     def _get_key(data):
         key_pattern = r'<link rel="alternate" href=".*?\/rss.php\?key=(?P<key>[a-z,0-9]+)" title=".*"'
@@ -35,7 +37,8 @@ class TorrentsPageParser:
             if not self.not_found_pattern.search(data):
                 raise NcoreParserError("Error while parse download items in {}.".format(self.__class__.__name__))
         for i in range(0, len(types)):
-            yield {"id": ids[i], "title": names[i], "key": key, "date": parse_datetime(dates[i], times[i]), "size": Size(sizes[i]), "type": SearchParamType(types[i])}
+            yield {"id": ids[i], "title": names[i], "key": key,
+                    "date": parse_datetime(dates[i], times[i]), "size": Size(sizes[i]), "type": SearchParamType(types[i])}
 
 
 class TorrenDetailParser:
@@ -58,6 +61,7 @@ class TorrenDetailParser:
             raise NcoreParserError("Error while parsing by detailed page. {}".format(e))
         return {"title": title, "key": key, "date": date, "size": size, "type": t_type}
 
+
 class RssParser:
     def __init__(self):
         self.id_pattern = re.compile(r'<source url=".*?\/rss_dl.php\/id=(?P<id>[0-9]+)\/key\=.[a-z,0-9]+">')
@@ -65,17 +69,20 @@ class RssParser:
     def get_ids(self, data):
         return self.id_pattern.findall(data)
 
+
 class ActivityParser:
     def __init__(self):
-        self.action_pattern = re.compile(r'<a href=".*?" onclick="torrent\((.*?)\); return false;" title=".*?"><nobr>.*?<\/nobr><\/a>')
+        self.action_pattern = re.compile(r'<a href=".*?" onclick="torrent\((.*?)\); return false;'
+                                         r'" title=".*?"><nobr>.*?<\/nobr><\/a>')
 
     def get_ids(self, data):
         return self.action_pattern.findall(data)
-        
+
+
 class RecommendedParser:
     def __init__(self):
-        self.recommended_pattern = re.compile(r'<a href=".*?torrents.php\?action=details\&id=(.*?)" target=".*?"><img src=".*?" width=".*?" height=".*?" border=".*?" title=".*?"\/><\/a>')
+        self.recommended_pattern = re.compile(r'<a href=".*?torrents.php\?action=details\&id=(.*?)" target=".*?">'
+                                              r'<img src=".*?" width=".*?" height=".*?" border=".*?" title=".*?"\/><\/a>')
 
     def get_ids(self, data):
         return self.recommended_pattern.findall(data)
-

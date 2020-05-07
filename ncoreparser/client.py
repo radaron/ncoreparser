@@ -1,21 +1,20 @@
 import requests
 import os
 from ncoreparser.data import (
-    URLs, 
-    SearchParamType, 
+    URLs,
+    SearchParamType,
     SearchParamWhere,
-    ParamSort, 
+    ParamSort,
     ParamSeq
 )
 from ncoreparser.error import (
     NcoreConnectionError,
-    NcoreCredentialError, 
-    NcoreDownloadError,
-    NcoreParserError
+    NcoreCredentialError,
+    NcoreDownloadError
 )
 from ncoreparser.parser import (
-    TorrentsPageParser, 
-    TorrenDetailParser, 
+    TorrentsPageParser,
+    TorrenDetailParser,
     RssParser,
     ActivityParser,
     RecommendedParser
@@ -68,7 +67,7 @@ class Client:
             item_count += len(new_torrents)
             torrents.extend(new_torrents)
         return torrents[:number]
-    
+
     def get_torrent(self, id):
         url = URLs.DETAIL_PATTERN.value.format(id=id)
         try:
@@ -84,7 +83,7 @@ class Client:
             content = self._session.get(url)
         except ConnectionError as e:
             raise NcoreConnectionError("Error while get rss. Url: '{}'. {}".format(url, e))
-        
+
         torrents = []
         for id in self._rss_parser.get_ids(content.text):
             torrents.append(self.get_torrent(id))
@@ -95,12 +94,12 @@ class Client:
             content = self._session.get(URLs.ACTIVITY.value)
         except ConnectionError as e:
             raise NcoreConnectionError("Error while get activity. Url: '{}'. {}".format(URLs.ACTIVITY.value, e))
-        
+
         torrents = []
         for id in self._activity_parser.get_ids(content.text):
             torrents.append(self.get_torrent(id))
         return torrents
-    
+
     def get_recommended(self, type=None):
         try:
             content = self._session.get(URLs.RECOMMENDED.value)
@@ -109,7 +108,6 @@ class Client:
 
         all_recommended = [self.get_torrent(id) for id in self._recommended_parser.get_ids(content.text)]
         return [torrent for torrent in all_recommended if not type or torrent['type'] == type]
-
 
     def download(self, torrent, path):
         file_path, url = torrent.prepare_download(path)
@@ -125,4 +123,3 @@ class Client:
 
     def close(self):
         self._session.close()
-

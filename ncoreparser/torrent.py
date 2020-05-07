@@ -1,8 +1,6 @@
 import os
-import re
-import requests
 from ncoreparser.data import URLs
-from ncoreparser.error import NcoreConnectionError
+
 
 class Torrent:
     def __init__(self, id, title, key, size, type, date):
@@ -17,7 +15,7 @@ class Torrent:
 
     def __getitem__(self, key):
         return self._details[key]
-    
+
     def keys(self):
         return self._details.keys()
 
