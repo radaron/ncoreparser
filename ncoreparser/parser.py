@@ -38,14 +38,16 @@ class TorrentsPageParser:
                 raise NcoreParserError("Error while parse download items in {}.".format(self.__class__.__name__))
         for i in range(0, len(types)):
             yield {"id": ids[i], "title": names[i], "key": key,
-                    "date": parse_datetime(dates[i], times[i]), "size": Size(sizes[i]), "type": SearchParamType(types[i])}
+                   "date": parse_datetime(dates[i], times[i]), "size": Size(sizes[i]), "type": SearchParamType(types[i])}
 
 
 class TorrenDetailParser:
     def __init__(self):
-        self.type_pattern = re.compile(r'<div class="dd"><a title=".*?" href=".*?torrents.php\?csoport_listazas=(?P<category>.*?)">'
-                                       r'.*?</a>.*?<a title=".*?" href=".*?torrents.php\?tipus=(?P<type>.*?)">.*?</a></div>')
-        self.date_pattern = re.compile(r'<div class="dd">(?P<date>[0-9]{4}\-[0-9]{2}\-[0-9]{2}\ [0-9]{2}\:[0-9]{2}\:[0-9]{2})</div>')
+        self.type_pattern = re.compile(r'<div class="dd"><a title=".*?" href=".*?torrents.php\?csoport_listazas='
+                                       r'(?P<category>.*?)">.*?</a>.*?<a title=".*?" href=".*?torrents.php\?tipus='
+                                       r'(?P<type>.*?)">.*?</a></div>')
+        self.date_pattern = re.compile(r'<div class="dd">(?P<date>[0-9]{4}\-[0-9]{2}\-[0-9]{2}\ '
+                                       r'[0-9]{2}\:[0-9]{2}\:[0-9]{2})</div>')
         self.title_pattern = re.compile(r'<div class="torrent_reszletek_cim">(?P<title>.*?)</div>')
         self.size_pattern = re.compile(r'<div class="dd">(?P<size>[0-9,.]+\ [K,M,G]{1}B)\ \(.*?\)</div>')
 
