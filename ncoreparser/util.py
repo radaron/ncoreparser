@@ -30,26 +30,44 @@ class Size:
     def __repr__(self):
         return "{:.2f} {}".format(self.size, self.unit)
     
-    def __add__(self, obj):
+    def _check_obj(self, obj):
         if not isinstance(obj, Size):
-            raise Exception("Error while adding different object type to {}".format(self.__class__.__name__))
+            raise Exception("Error while perform operaton with Size and {}".format(type(obj)))
+
+    def __add__(self, obj):
+        self._check_obj(obj)
         size = self._size + obj._size
         unit = self._unit
         for u, multiplier in self.unit_size.items():
-            if len(str(int(size/multiplier))) <= 3:
+            if 0 < int(self._size/multiplier) <= 1000:
                 unit = u
                 break
         return Size(size, unit)
     
     def __iadd__(self, obj):
-        if not isinstance(obj, Size):
-            raise Exception("Error while adding different object type to {}".format(self.__class__.__name__))
+        self._check_obj(obj)
         self._size = self._size + obj._size
         for unit, multiplier in self.unit_size.items():
-            if len(str(int(self._size/multiplier))) <= 3:
+            if 0 < int(self._size/multiplier) <= 1000:
                 self._unit = unit
                 break
         return self
+    
+    def __eq__(self, obj):
+        self._check_obj(obj)
+        return self._size == obj._size
+    
+    def __ne__(self, obj):
+        self._check_obj(obj)
+        return self._size != obj._size
+    
+    def __gt__(self, obj):
+        self._check_obj(obj)
+        return self._size > obj._size
+    
+    def __ge__(self, obj):
+        self._check_obj(obj)
+        return self._size >= obj._size
     
     @property
     def unit(self):
@@ -62,7 +80,6 @@ class Size:
     @property
     def bytes(self):
         return self._size
-
 
 
 def parse_datetime(date, time):

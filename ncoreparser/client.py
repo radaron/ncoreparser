@@ -28,6 +28,7 @@ class Client:
     def __init__(self):
         self._session = requests.session()
         self._session.cookies.clear()
+        self._session.headers.update({'User-Agent': 'python ncoreparser'})
         self._page_parser = TorrentsPageParser()
         self._detailed_parser = TorrenDetailParser()
         self._rss_parser = RssParser()
