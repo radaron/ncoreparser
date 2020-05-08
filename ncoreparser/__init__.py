@@ -11,5 +11,6 @@ from .error import (
     NcoreCredentialError,
     NcoreConnectionError
 )
+from .util import Size
 
 __name__ = "ncoreparser"
