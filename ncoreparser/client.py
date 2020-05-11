@@ -24,10 +24,11 @@ from ncoreparser.constant import TORRENTS_PER_PAGE
 
 
 class Client:
-    def __init__(self):
+    def __init__(self, timeout=0):
         self._session = requests.session()
         self._session.cookies.clear()
         self._session.headers.update({'User-Agent': 'python ncoreparser'})
+        self.timeout = timeout
         self._page_parser = TorrentsPageParser()
         self._detailed_parser = TorrenDetailParser()
         self._rss_parser = RssParser()
@@ -37,7 +38,8 @@ class Client:
     def open(self, username, password):
         try:
             r = self._session.post(URLs.LOGIN.value,
-                                   {"nev": username, "pass": password})
+                                   {"nev": username, "pass": password},
+                                   timeout=self.timeout)
         except Exception:
             raise NcoreConnectionError("Error while perform post "
                                        "method to url '{}'.".format(URLs.LOGIN.value))
@@ -58,8 +60,8 @@ class Client:
                                                      pattern=pattern,
                                                      where=where.value)
             try:
-                request = self._session.get(url)
-            except ConnectionError as e:
+                request = self._session.get(url, timeout=self.timeout)
+            except Exception as e:
                 raise NcoreConnectionError("Error while searhing torrents. {}".format(e))
             new_torrents = [Torrent(**params) for params in self._page_parser.get_items(request.text)]
             if len(new_torrents) == 0:
@@ -71,8 +73,8 @@ class Client:
     def get_torrent(self, id):
         url = URLs.DETAIL_PATTERN.value.format(id=id)
         try:
-            content = self._session.get(url)
-        except ConnectionError as e:
+            content = self._session.get(url, timeout=self.timeout)
+        except Exception as e:
             raise NcoreConnectionError("Error while get detailed page. Url: '{}'. {}".format(url, e))
         params = self._detailed_parser.get_item(content.text)
         params["id"] = id
@@ -80,8 +82,8 @@ class Client:
 
     def get_by_rss(self, url):
         try:
-            content = self._session.get(url)
-        except ConnectionError as e:
+            content = self._session.get(url, timeout=self.timeout)
+        except Exception as e:
             raise NcoreConnectionError("Error while get rss. Url: '{}'. {}".format(url, e))
 
         torrents = []
@@ -91,8 +93,8 @@ class Client:
 
     def get_by_activity(self):
         try:
-            content = self._session.get(URLs.ACTIVITY.value)
-        except ConnectionError as e:
+            content = self._session.get(URLs.ACTIVITY.value, timeout=self.timeout)
+        except Exception as e:
             raise NcoreConnectionError("Error while get activity. Url: '{}'. {}".format(URLs.ACTIVITY.value, e))
 
         torrents = []
@@ -102,8 +104,8 @@ class Client:
 
     def get_recommended(self, type=None):
         try:
-            content = self._session.get(URLs.RECOMMENDED.value)
-        except ConnectionError as e:
+            content = self._session.get(URLs.RECOMMENDED.value, timeout=self.timeout)
+        except Exception as e:
             raise NcoreConnectionError("Error while get recommended. Url: '{}'. {}".format(URLs.RECOMMENDED.value, e))
 
         all_recommended = [self.get_torrent(id) for id in self._recommended_parser.get_ids(content.text)]
@@ -112,8 +114,8 @@ class Client:
     def download(self, torrent, path):
         file_path, url = torrent.prepare_download(path)
         try:
-            content = self._session.get(url)
-        except ConnectionError as e:
+            content = self._session.get(url, timeout=self.timeout)
+        except Exception as e:
             raise NcoreConnectionError("Error while downloading torrent. Url: '{}'. {}".format(url, e))
         if os.path.exists(file_path):
             raise NcoreDownloadError("Error while downloading file: '{}'. It is already exists.".format(file_path))
