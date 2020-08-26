@@ -24,7 +24,7 @@ from ncoreparser.constant import TORRENTS_PER_PAGE
 
 
 class Client:
-    def __init__(self, timeout=0):
+    def __init__(self, timeout=1):
         self._session = requests.session()
         self._session.cookies.clear()
         self._session.headers.update({'User-Agent': 'python ncoreparser'})
