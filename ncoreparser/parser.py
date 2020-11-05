@@ -2,7 +2,7 @@ import re
 import datetime
 from ncoreparser.error import NcoreParserError
 from ncoreparser.util import parse_datetime, Size
-from ncoreparser.data import SearchParamType, get_detaild_param
+from ncoreparser.data import SearchParamType, get_detailed_param
 
 
 class TorrentsPageParser:
@@ -54,7 +54,7 @@ class TorrenDetailParser:
     def get_item(self, data):
         try:
             t_type = self.type_pattern.search(data)
-            t_type = get_detaild_param(t_type.group("category"), t_type.group("type"))
+            t_type = get_detailed_param(t_type.group("category"), t_type.group("type"))
             date = datetime.datetime.strptime(self.date_pattern.search(data).group("date"), "%Y-%m-%d %H:%M:%S")
             title = self.title_pattern.search(data).group("title")
             key = TorrentsPageParser._get_key(data)

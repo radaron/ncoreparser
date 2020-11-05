@@ -84,4 +84,4 @@ class Size:
 
 
 def parse_datetime(date, time):
-    return datetime.datetime.strptime("_".join([date, time]), "%Y-%m-%d_%H:%M:%S")
+    return datetime.datetime.strptime("{}_{}".format(date, time), "%Y-%m-%d_%H:%M:%S")
