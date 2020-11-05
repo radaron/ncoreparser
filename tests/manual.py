@@ -1,6 +1,6 @@
 import sys
 import time
-from ncoreparser import Client, SearchParamWhere, SearchParamType, ParamSort, ParamSeq
+from ncoreparser import Client, SearchParamType, ParamSort, ParamSeq
 
 
 def print_category(msg):
@@ -18,9 +18,6 @@ def pretty_print(torrent):
                                                  str(torrent['size']),
                                                  str(torrent['id'])))
     print("*{:^80}*{:^30}*{:^10}*{:^10}*".format("-"*80, "-"*30, "-"*10, "-"*10))
-
-
-
 
 
 if __name__ == "__main__":
@@ -52,7 +49,6 @@ if __name__ == "__main__":
     torrents = client.get_by_activity()
     for torrent in torrents:
         pretty_print(torrent)
-
 
     print_category("List by recommended")
     torrents = client.get_recommended(type=SearchParamType.SD_HUN)
