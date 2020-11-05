@@ -102,7 +102,7 @@ class RecommendedParser:
         bs = Soup(data)
         # Find all tags with exactly two attributes
         ids = bs.findAll('a', href=re.compile("action=details"), attrs={'target': '_blank'})
-        ids = [id for id in ids if len(id.attrs)==2]
+        ids = [id for id in ids if len(id.attrs) == 2]
 
         # get id from found html tags
         ids = [self.id_re.search(str(id)).group(1) for id in ids if self.id_re.search(str(id))]
