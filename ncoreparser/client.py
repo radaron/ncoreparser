@@ -111,13 +111,13 @@ class Client:
         all_recommended = [self.get_torrent(id) for id in self._recommended_parser.get_ids(content.text)]
         return [torrent for torrent in all_recommended if not type or torrent['type'] == type]
 
-    def download(self, torrent, path):
+    def download(self, torrent, path, override=False):
         file_path, url = torrent.prepare_download(path)
         try:
             content = self._session.get(url, timeout=self.timeout)
         except Exception as e:
             raise NcoreConnectionError("Error while downloading torrent. Url: '{}'. {}".format(url, e))
-        if os.path.exists(file_path):
+        if not override and os.path.exists(file_path):
             raise NcoreDownloadError("Error while downloading file: '{}'. It is already exists.".format(file_path))
         with open(file_path, 'wb') as fh:
             fh.write(content.content)
