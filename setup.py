@@ -20,6 +20,7 @@ setuptools.setup(
     ],
     install_requires=[
           'requests==2.23.0',
+          'beautifulsoup4==4.9.3',
     ],
     python_requires='>=3.5',
 )

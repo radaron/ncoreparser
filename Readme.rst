@@ -33,9 +33,10 @@ Get most seeded torrents from all category
     if __name__ == "__main__":
         client = Client()
         client.open("<username>", "<password>")
-    
+
         for t_type in SearchParamType:
-            torrent = client.search(pattern="", type=t_type, number=1, sort_by=ParamSort.SEEDERS, sort_order=ParamSeq.DECREASING)[0]
+            torrent = client.search(pattern="", type=t_type, number=1,
+                                    sort_by=ParamSort.SEEDERS, sort_order=ParamSeq.DECREASING)[0]
             print(torrent['title'], torrent['type'], torrent['size'], torrent['id'])
 
         client.close()
@@ -51,11 +52,11 @@ This example download Forest gump torrent file and save it to temp folder
     if __name__ == "__main__":
         client = Client()
         client.open("<username>", "<password>")
-    
-        
-        torrent = client.search(pattern="Forrest gump", type=SearchParamType.SD_HUN, number=1, 
+
+
+        torrent = client.search(pattern="Forrest gump", type=SearchParamType.SD_HUN, number=1,
                                 sort_by=ParamSort.SEEDERS, sort_order=ParamSeq.DECREASING)[0]
-        
+
         client.download(torrent, "/tmp")
         client.close()
 
@@ -64,7 +65,7 @@ This example get all torrents and their informations from an ncore bookmark (rss
 
 .. code-block:: python
 
-    from ncoreparser import Client 
+    from ncoreparser import Client
 
 
     if __name__ == "__main__":
@@ -76,7 +77,7 @@ This example get all torrents and their informations from an ncore bookmark (rss
             print(torrent['title'], torrent['type'], torrent['size'], torrent['id'])
 
         client.close()
-   
+
 **Get torrents by activity**
 This example get all torrents and their informations from the Hit&run page
 

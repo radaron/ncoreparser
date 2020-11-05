@@ -83,5 +83,5 @@ class Size:
         return self._size
 
 
-def parse_datetime(date, time):
-    return datetime.datetime.strptime("_".join([date, time]), "%Y-%m-%d_%H:%M:%S")
+def parse_datetime(date):
+    return datetime.datetime.strptime(date, "%Y-%m-%d%H:%M:%S")
