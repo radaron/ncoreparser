@@ -1,3 +1,4 @@
+# flake8: noqa
 from .client import Client
 from .data import (
     SearchParamType,
