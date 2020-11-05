@@ -1,6 +1,6 @@
 import re
 import datetime
-from bs import Beautifulsoup as Soup
+from bs4 import Beautifulsoup as Soup
 from ncoreparser.error import NcoreParserError
 from ncoreparser.util import parse_datetime, Size
 from ncoreparser.data import SearchParamType, get_detailed_param
