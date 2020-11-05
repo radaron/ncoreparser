@@ -4,6 +4,7 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+zipp = "==1.2.0" # Necessary only for python3.5
 pytest = "*"
 flake8 = "*"
 
