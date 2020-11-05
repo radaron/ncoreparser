@@ -51,12 +51,11 @@ class TorrenDetailParser:
         self.group_re = re.compile(r'csoport_listazas=(.*?)"')
         self.type_re = re.compile(r'tipus=(.*?)"')
         self.date_re = re.compile(r'([0-9]{4}\-[0-9]{2}\-[0-9]{2} [0-9]{2}\:[0-9]{2}\:[0-9]{2})')
-        self.size_re = re.compile(r'([0-9,.]+\ [K,M,G]{1}B\ )')
+        self.size_re = re.compile(r'([0-9,.]+\ [K,M,G]{1}B) ')
 
     def get_item(self, data):
         try:
             bs = Soup(data, "html.parser")
-
             # get type
             group = self.group_re.search(data).group(1)
             type = self.type_re.search(data).group(1)
@@ -74,7 +73,7 @@ class TorrenDetailParser:
             # get key
             key = TorrentsPageParser._get_key(bs)
         except Exception as e:
-            raise NcoreParserError("Error while parsing by detailed page. {}".format(e))
+            raise NcoreParserError("Error while parsing by detailed page. {} {}".format(e, data))
         return {"title": title, "key": key, "date": date, "size": size, "type": type}
 
 
@@ -88,7 +87,7 @@ class RssParser:
 
 class ActivityParser:
     def __init__(self):
-        self.action_pattern = re.compile(r'action=details\&id=(.*?)"')
+        self.action_pattern = re.compile(r'torrent\((.*)\)')
 
     def get_ids(self, data):
         return self.action_pattern.findall(data)
@@ -99,7 +98,7 @@ class RecommendedParser:
         self.id_re = re.compile('id=(.*?)"')
 
     def get_ids(self, data):
-        bs = Soup(data)
+        bs = Soup(data, "html.parser")
         # Find all tags with exactly two attributes
         ids = bs.findAll('a', href=re.compile("action=details"), attrs={'target': '_blank'})
         ids = [id for id in ids if len(id.attrs) == 2]
