@@ -40,7 +40,7 @@ class TorrentsPageParser:
         if len(types) != 0 and len(types) == len(ids) == len(names) == len(sizes) == len(dates):
             key = self._get_key(bs)
         else:
-            if data.find(string="Nincs találat!"):
+            if bs.find(string="Nincs találat!"):
                 raise NcoreParserError("Error while parse download items in {}.".format(self.__class__.__name__))
         for i in range(0, len(types)):
             yield {"id": ids[i], "title": names[i], "key": key, "date": dates[i], "size": sizes[i], "type": types[i]}
@@ -48,31 +48,31 @@ class TorrentsPageParser:
 
 class TorrenDetailParser:
     def __init__(self):
-        group_re = re.compile(r'csoport_listazas=(.*?)"')
-        type_re = re.compile(r'tipus=(.*?)"')
-        date_re = re.compile(r'([0-9]{4}\-[0-9]{2}\-[0-9]{2} [0-9]{2}\:[0-9]{2}\:[0-9]{2})')
-        size_re = re.compile(r'([0-9,.]+\ [K,M,G]{1}B\ )')
+        self.group_re = re.compile(r'csoport_listazas=(.*?)"')
+        self.type_re = re.compile(r'tipus=(.*?)"')
+        self.date_re = re.compile(r'([0-9]{4}\-[0-9]{2}\-[0-9]{2} [0-9]{2}\:[0-9]{2}\:[0-9]{2})')
+        self.size_re = re.compile(r'([0-9,.]+\ [K,M,G]{1}B\ )')
 
     def get_item(self, data):
         try:
-            # get type
-            group = self.group_re.search(str(data)).group(1)
-            type = self.type_re.search(str(data)).group(1)
-            type = get_detailed_param(group, type)
-
             bs = Soup(data, "html.parser")
 
+            # get type
+            group = self.group_re.search(data).group(1)
+            type = self.type_re.search(data).group(1)
+            type = get_detailed_param(group, type)
+
             # get date
-            date = datetime.datetime.strptime(self.date_re.search(str(data)).group(1), "%Y-%m-%d %H:%M:%S")
+            date = datetime.datetime.strptime(self.date_re.search(data).group(1), "%Y-%m-%d %H:%M:%S")
 
             # get title
-            title = data.find('div', class_="torrent_reszletek_cim").string
+            title = bs.find('div', class_="torrent_reszletek_cim").string
 
             # get size
-            size = Size(self.size_re.search(str(data)).group(1))
+            size = Size(self.size_re.search(data).group(1))
 
             # get key
-            key = TorrentsPageParser._get_key(data)
+            key = TorrentsPageParser._get_key(bs)
         except Exception as e:
             raise NcoreParserError("Error while parsing by detailed page. {}".format(e))
         return {"title": title, "key": key, "date": date, "size": size, "type": type}
