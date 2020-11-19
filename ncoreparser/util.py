@@ -3,10 +3,10 @@ import datetime
 
 class Size:
     unit_size = {
-        "KB": 1024,
-        "MB": 1024**2,
-        "GB": 1024**3,
-        "TB": 1024**4
+        "KiB": 1024,
+        "MiB": 1024**2,
+        "GiB": 1024**3,
+        "TiB": 1024**4
     }
 
     def __init__(self, size, unit=None):
