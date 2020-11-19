@@ -49,7 +49,7 @@ class TorrenDetailParser:
         self.date_pattern = re.compile(r'<div class="dd">(?P<date>[0-9]{4}\-[0-9]{2}\-[0-9]{2}\ '
                                        r'[0-9]{2}\:[0-9]{2}\:[0-9]{2})</div>')
         self.title_pattern = re.compile(r'<div class="torrent_reszletek_cim">(?P<title>.*?)</div>')
-        self.size_pattern = re.compile(r'<div class="dd">(?P<size>[0-9,.]+\ [K,M,G]{1}B)\ \(.*?\)</div>')
+        self.size_pattern = re.compile(r'<div class="dd">(?P<size>[0-9,.]+\ [K,M,G]{1}iB)\ \(.*?\)</div>')
 
     def get_item(self, data):
         try:
