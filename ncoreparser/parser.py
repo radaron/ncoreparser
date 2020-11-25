@@ -74,8 +74,7 @@ class RssParser:
 
 class ActivityParser:
     def __init__(self):
-        self.action_pattern = re.compile(r'<a href=".*?" onclick="torrent\((.*?)\); return false;'
-                                         r'" title=".*?"><nobr>.*?<\/nobr><\/a>')
+        self.action_pattern = re.compile(r'onclick="torrent\((.*?)\);')
 
     def get_ids(self, data):
         return self.action_pattern.findall(data)
