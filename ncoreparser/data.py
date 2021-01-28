@@ -99,11 +99,11 @@ class ParamSeq(Enum):
 
 
 class URLs(Enum):
-    INDEX = "https://ncore.cc/index.php"
-    LOGIN = "https://ncore.cc/login.php"
-    ACTIVITY = "https://ncore.cc/hitnrun.php"
-    RECOMMENDED = "https://ncore.cc/recommended.php"
-    TORRENTS_BASE = "https://ncore.cc/torrents.php"
+    INDEX = "https://ncore.pro/index.php"
+    LOGIN = "https://ncore.pro/login.php"
+    ACTIVITY = "https://ncore.pro/hitnrun.php"
+    RECOMMENDED = "https://ncore.pro/recommended.php"
+    TORRENTS_BASE = "https://ncore.pro/torrents.php"
     DOWNLOAD_PATTERN = TORRENTS_BASE+"?oldal={page}" \
                                      "&tipus={t_type}" \
                                      "&miszerint={sort}" \
@@ -111,4 +111,4 @@ class URLs(Enum):
                                      "&mire={pattern}" \
                                      "&miben={where}"
     DETAIL_PATTERN = TORRENTS_BASE+"?action=details&id={id}"
-    DOWNLOAD_LINK = "https://ncore.cc/torrents.php?action=download&id={id}&key={key}"
+    DOWNLOAD_LINK = "https://ncore.pro/torrents.php?action=download&id={id}&key={key}"
