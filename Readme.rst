@@ -8,7 +8,7 @@ Ncoreparser
 Introduction
 ############
 
-This module provides python API-s to manage torrents from ncore.cc eg.: search, download, rssfeed, etc..
+This module provides python API-s to manage torrents from ncore.pro eg.: search, download, rssfeed, etc..
 
 
 Install
