@@ -5,26 +5,28 @@ from ncoreparser import Client, SearchParamType, ParamSort, ParamSeq
 
 def print_category(msg):
     print("")
-    print("*{:133}*".format("-"*133))
-    print("|{:^133}|".format(msg))
-    print("*{:^80}*{:^30}*{:^10}*{:^10}*".format("-"*80, "-"*30, "-"*10, "-"*10))
-    print("|{:^80}|{:^30}|{:^10}|{:^10}|".format("Title", "Type", "Size", "ID"))
-    print("*{:^80}*{:^30}*{:^10}*{:^10}*".format("-"*80, "-"*30, "-"*10, "-"*10))
+    print("*{:175}*".format("-"*175))
+    print("|{:^175}|".format(msg))
+    print("*{:^100}*{:^30}*{:^10}*{:^10}*{:^10}*{:^10}*".format("-"*100, "-"*30, "-"*10, "-"*10, "-"*10, "-"*10))
+    print("|{:^100}|{:^30}|{:^10}|{:^10}|{:^10}|{:^10}|".format("Title", "Type", "Size", "ID", "Seed", "Leech"))
+    print("*{:^100}*{:^30}*{:^10}*{:^10}*{:^10}*{:^10}*".format("-"*100, "-"*30, "-"*10, "-"*10, "-"*10, "-"*10))
 
 
 def pretty_print(torrent):
-    print("|{:^80}|{:^30}|{:^10}|{:^10}|".format(torrent['title'],
+    print("|{:^100}|{:^30}|{:^10}|{:^10}|{:^10}|{:^10}|".format(torrent['title'],
                                                  torrent['type'],
                                                  str(torrent['size']),
-                                                 str(torrent['id'])))
-    print("*{:^80}*{:^30}*{:^10}*{:^10}*".format("-"*80, "-"*30, "-"*10, "-"*10))
+                                                 str(torrent['id']),
+                                                 torrent['seed'],
+                                                 torrent['leech']))
+    print("*{:^100}*{:^30}*{:^10}*{:^10}*{:^10}*{:^10}*".format("-"*100, "-"*30, "-"*10, "-"*10, "-"*10, "-"*10))
 
 
 if __name__ == "__main__":
     start = time.time()
 
     print("Login")
-    client = Client()
+    client = Client(timeout=5)
     client.open(sys.argv[1], sys.argv[2])
 
     print_category("Most seeded torrents/category")
