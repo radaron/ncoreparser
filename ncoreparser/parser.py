@@ -13,6 +13,8 @@ class TorrentsPageParser:
         self.date_pattern = re.compile(r'<div class="box_feltoltve2">(.*?)<br>(.*?)</div>')
         self.size_pattern = re.compile(r'<div class="box_meret2">(.*?)</div>')
         self.not_found_pattern = re.compile(r'<div class="lista_mini_error">Nincs találat!</div>')
+        self.seeders_pattern = re.compile(r'<div class="box_s2"><a class="torrent" href=".*">([0-9]+)</a></div>')
+        self.leechers_pattern = re.compile(r'<div class="box_l2"><a class="torrent" href=".*">([0-9]+)</a></div>')
 
     @staticmethod
     def _get_key(data):
@@ -29,7 +31,9 @@ class TorrentsPageParser:
         ids_names = self.id_name_pattern.findall(data)
         dates_times = self.date_pattern.findall(data)
         sizes = self.size_pattern.findall(data)
-        if len(types) != 0 and len(types) == len(ids_names) == len(dates_times) == len(sizes):
+        seed = self.seeders_pattern.findall(data)
+        leech = self.leechers_pattern.findall(data)
+        if len(types) != 0 and len(types) == len(ids_names) == len(dates_times) == len(sizes) == len(seed) == len(leech):
             ids, names = zip(*ids_names)
             dates, times = zip(*dates_times)
             key = self._get_key(data)
@@ -37,8 +41,8 @@ class TorrentsPageParser:
             if not self.not_found_pattern.search(data):
                 raise NcoreParserError("Error while parse download items in {}.".format(self.__class__.__name__))
         for i in range(0, len(types)):
-            yield {"id": ids[i], "title": names[i], "key": key,
-                   "date": parse_datetime(dates[i], times[i]), "size": Size(sizes[i]), "type": SearchParamType(types[i])}
+            yield {"id": ids[i], "title": names[i], "key": key, "date": parse_datetime(dates[i], times[i]),
+                   "size": Size(sizes[i]), "type": SearchParamType(types[i]), "seed": seed[i], "leech": leech[i]}
 
 
 class TorrenDetailParser:
@@ -50,6 +54,11 @@ class TorrenDetailParser:
                                        r'[0-9]{2}\:[0-9]{2}\:[0-9]{2})</div>')
         self.title_pattern = re.compile(r'<div class="torrent_reszletek_cim">(?P<title>.*?)</div>')
         self.size_pattern = re.compile(r'<div class="dd">(?P<size>[0-9,.]+\ [K,M,G]{1}iB)\ \(.*?\)</div>')
+        self.peers_pattern = re.compile(r'div class="dt">Seederek:</div>.*?<div class="dd"><a onclick=".*?">(?P<seed>[0-9]+)'
+                                        r'</a></div>.*?<div class="dt">Leecherek:</div>.*?<div class="dd"><a onclick=".*?">'
+                                        r'(?P<leech>[0-9]+)</a></div>', re.DOTALL)
+
+
 
     def get_item(self, data):
         try:
@@ -59,9 +68,14 @@ class TorrenDetailParser:
             title = self.title_pattern.search(data).group("title")
             key = TorrentsPageParser._get_key(data)
             size = Size(self.size_pattern.search(data).group("size"))
+            peers = self.peers_pattern.search(data)
+            seed = peers.group('seed')
+            leech = peers.group('leech')
         except AttributeError as e:
+            with open("/home/aron/Asztal/test.html", 'w') as f:
+                f.write(data)
             raise NcoreParserError("Error while parsing by detailed page. {}".format(e))
-        return {"title": title, "key": key, "date": date, "size": size, "type": t_type}
+        return {"title": title, "key": key, "date": date, "size": size, "type": t_type, 'seed': seed, 'leech': leech}
 
 
 class RssParser:
