@@ -50,10 +50,10 @@ class Client:
 
     def search(self, pattern, type=SearchParamType.ALL_OWN,  where=SearchParamWhere.NAME,
                sort_by=ParamSort.UPLOAD, sort_order=ParamSeq.DECREASING, number=TORRENTS_PER_PAGE):
-        item_count = 0
+        page_count = 0
         torrents = []
-        while item_count < number:
-            url = URLs.DOWNLOAD_PATTERN.value.format(page="",
+        while page_count * TORRENTS_PER_PAGE < number:
+            url = URLs.DOWNLOAD_PATTERN.value.format(page=page_count+1,
                                                      t_type=type.value,
                                                      sort=sort_by.value,
                                                      seq=sort_order.value,
@@ -66,8 +66,8 @@ class Client:
             new_torrents = [Torrent(**params) for params in self._page_parser.get_items(request.text)]
             if len(new_torrents) == 0:
                 return torrents
-            item_count += len(new_torrents)
             torrents.extend(new_torrents)
+            page_count += 1
         return torrents[:number]
 
     def get_torrent(self, id):
