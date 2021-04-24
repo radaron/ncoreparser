@@ -5,7 +5,7 @@ with open("Readme.rst", "r") as fh:
 
 setuptools.setup(
     name="ncoreparser",
-    version="1.5.0",
+    version="1.6.0",
     author="Aron Radics",
     author_email="radics.aron.jozsef@gmail.com",
     description="Package to download from ncore.pro",
