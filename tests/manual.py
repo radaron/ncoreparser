@@ -1,5 +1,6 @@
 import sys
 import time
+import argparse
 from ncoreparser import Client, SearchParamType, ParamSort, ParamSeq
 
 
@@ -21,13 +22,20 @@ def pretty_print(torrent):
                                                  torrent['leech']))
     print("*{:^100}*{:^30}*{:^10}*{:^10}*{:^10}*{:^10}*".format("-"*100, "-"*30, "-"*10, "-"*10, "-"*10, "-"*10))
 
+parser = argparse.ArgumentParser()
+parser.add_argument('--user', '-u', required=True, type=str)
+parser.add_argument('--passw', '-p', required=True, type=str)
+parser.add_argument('--rss-feed', '-r', required=True, type=str)
+
+args = parser.parse_args()
+
 
 if __name__ == "__main__":
     start = time.time()
 
     print("Login")
     client = Client(timeout=5)
-    client.open(sys.argv[1], sys.argv[2])
+    client.open(args.user, args.passw)
 
     print_category("Most seeded torrents/category")
     for t_type in SearchParamType:
@@ -43,7 +51,7 @@ if __name__ == "__main__":
     client.download(torrent, "/tmp", override=True)
 
     print_category("List by rss")
-    torrents = client.get_by_rss(sys.argv[3])
+    torrents = client.get_by_rss(args.rss_feed)
     for torrent in torrents:
         pretty_print(torrent)
 
