@@ -19,11 +19,8 @@ class Size:
 
     def _parse_str(self, size):
         size, unit = size.split(" ")
-        for i in self.unit_size:
-            if unit == i:
-                self._size = float(size)*self.unit_size[i]
-                self._unit = i
-                break
+        self._size = float(size)*self.unit_size[unit]
+        self._unit = unit
 
     def __str__(self):
         return "{:.2f} {}".format(self.size, self.unit)
