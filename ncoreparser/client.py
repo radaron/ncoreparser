@@ -90,7 +90,50 @@ class Client:
         for id in self._rss_parser.get_ids(content.text):
             torrents.append(self.get_torrent(id))
         return torrents
+    
+    def get_by_activity2(self):
 
+        content = None
+        try:
+            content = self._session.get(URLs.ACTIVITY.value, timeout=self.timeout)
+        except Exception as e:
+            raise NcoreConnectionError("Error while get activity. Url: '{}'. {}".format(URLs.ACTIVITY.value, e))
+        torrents = []
+        splitedt = []
+        for x in content.text.split("""<div class="hnr_torrents">"""):
+                if "hnr_tname" in x:
+                        splitedt.append("""<div class="hnr_torrents">"""+x)
+        splitedt[-1] = splitedt[-1].split("""<div class="lista_lab"></div>""")[0]
+        for x in splitedt:
+             line = x.split("\n")
+             
+             for x in range(len(line)):
+                 line[x] = line[x].replace("	","")
+                 if x in [5,6,8,9]:
+                     line[x] = line[x].split(">")[1].split("<")[0]
+             line[3] = line[3].split(">")[0]
+             line31 = line[3].split(";")[0].split(" onclick=")[0].replace("""torrents.php?action=details&id=""","""""").replace("href=","")[4:].replace('"','')
+             line32 = line[3].split(";")[2][2:].replace("title=",'').replace('"','')
+             line[3] = line31 + "\n"+ line32
+             line[7] = line[7].split("""<div class="hnr_tseed"><span class="stopped">""")[1].split("<")[0]
+             line[10] = line[10].split("""<div class="hnr_ttimespent"><span class="stopped">""")[1].split("<")[0]
+             line[11] = line[11].split("""<div class="hnr_tratio"><span class="stopped">""")[1].split("<")[0]
+             
+             item = {}
+             item.update({'title':line[3].split("\n")[1]})
+             item.update({'id':int(line[3].split("\n")[0])})
+             item.update({'start':line[5]})
+             item.update({'lastupdate':line[6]})
+             item.update({'status':line[7]})
+             item.update({'upload':line[8]})
+             item.update({'download':line[9]})
+             item.update({'elapsedtime': line[10]})
+             item.update({'rate': float(line[11])})
+             item.update({'torrent':self.get_torrent(int(line[3].split("\n")[0]))})
+
+             torrents.append(item)
+        return torrents
+    
     def get_by_activity(self):
         try:
             content = self._session.get(URLs.ACTIVITY.value, timeout=self.timeout)
