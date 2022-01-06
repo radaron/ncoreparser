@@ -70,7 +70,7 @@ class Client:
             page_count += 1
         return torrents[:number]
 
-    def get_torrent(self, id):
+    def get_torrent(self, id, **ext_params):
         url = URLs.DETAIL_PATTERN.value.format(id=id)
         try:
             content = self._session.get(url, timeout=self.timeout)
@@ -78,6 +78,7 @@ class Client:
             raise NcoreConnectionError("Error while get detailed page. Url: '{}'. {}".format(url, e))
         params = self._detailed_parser.get_item(content.text)
         params["id"] = id
+        params.update(ext_params)
         return Torrent(**params)
 
     def get_by_rss(self, url):
