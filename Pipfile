@@ -11,4 +11,4 @@ flake8 = "*"
 requests = "==2.23.0"
 
 [requires]
-python_version = "3"
+python_version = "3.8"
