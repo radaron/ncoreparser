@@ -3,7 +3,7 @@ from ncoreparser.data import URLs
 
 
 class Torrent:
-    def __init__(self, id, title, key, size, type, date, seed, leech):
+    def __init__(self, id, title, key, size, type, date, seed, leech, **params):
         self._details = {}
         self._details["id"] = int(id)
         self._details["title"] = title
@@ -14,6 +14,9 @@ class Torrent:
         self._details["seed"] = seed
         self._details["leech"] = leech
         self._details["download"] = URLs.DOWNLOAD_LINK.value.format(id=id, key=key)
+
+        for key, value in params.items():
+            self._details[key] = value
 
     def __getitem__(self, key):
         return self._details[key]
