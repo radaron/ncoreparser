@@ -19,6 +19,7 @@ from ncoreparser.parser import (
     ActivityParser,
     RecommendedParser
 )
+from ncoreparser.util import Size
 from ncoreparser.torrent import Torrent
 from ncoreparser.constant import TORRENTS_PER_PAGE
 
@@ -99,8 +100,16 @@ class Client:
             raise NcoreConnectionError("Error while get activity. Url: '{}'. {}".format(URLs.ACTIVITY.value, e))
 
         torrents = []
-        for id in self._activity_parser.get_ids(content.text):
-            torrents.append(self.get_torrent(id))
+        for id, start_t, updated_t, status, uploaded, downloaded, remaining_t, rate in \
+            self._activity_parser.get_params(content.text):
+            torrents.append(self.get_torrent(id,
+                                             start=start_t,
+                                             updated=updated_t,
+                                             status=status,
+                                             uploaded=Size(uploaded),
+                                             downloaded=Size(downloaded),
+                                             remaining=remaining_t,
+                                             rate=float(rate)))
         return torrents
 
     def get_recommended(self, type=None):
