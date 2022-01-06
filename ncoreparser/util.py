@@ -3,6 +3,7 @@ import datetime
 
 class Size:
     unit_size = {
+        "B": 1,
         "KiB": 1024,
         "MiB": 1024**2,
         "GiB": 1024**3,
