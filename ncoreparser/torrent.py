@@ -14,9 +14,7 @@ class Torrent:
         self._details["seed"] = seed
         self._details["leech"] = leech
         self._details["download"] = URLs.DOWNLOAD_LINK.value.format(id=id, key=key)
-
-        for key, value in params.items():
-            self._details[key] = value
+        self._details.update(params)
 
     def __getitem__(self, key):
         return self._details[key]
