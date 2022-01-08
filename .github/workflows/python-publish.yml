@@ -1,9 +1,12 @@
 name: Upload Python Package
 
 on:
-  push:
-    branches:
-      - master
+  # the 1st condition
+  workflow_run:
+    workflows: ["Python application"]
+    branches: [master]
+    types:
+      - completed
 
 jobs:
   deploy:
@@ -22,7 +25,7 @@ jobs:
         pip install pipenv
         pipenv install --dev
     - name: Build package
-      run: pipenv run python -m build
+      run: pipenv run python setup.py bdist bdist_wheel
     - name: Publish package
       uses: pypa/gh-action-pypi-publish@27b31702a0e7fc50959f5ad993c78deac1bdfc29
       with:
