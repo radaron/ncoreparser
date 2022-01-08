@@ -19,6 +19,7 @@ from ncoreparser.parser import (
     ActivityParser,
     RecommendedParser
 )
+from ncoreparser.util import Size
 from ncoreparser.torrent import Torrent
 from ncoreparser.constant import TORRENTS_PER_PAGE
 
@@ -70,7 +71,7 @@ class Client:
             page_count += 1
         return torrents[:number]
 
-    def get_torrent(self, id):
+    def get_torrent(self, id, **ext_params):
         url = URLs.DETAIL_PATTERN.value.format(id=id)
         try:
             content = self._session.get(url, timeout=self.timeout)
@@ -78,6 +79,7 @@ class Client:
             raise NcoreConnectionError("Error while get detailed page. Url: '{}'. {}".format(url, e))
         params = self._detailed_parser.get_item(content.text)
         params["id"] = id
+        params.update(ext_params)
         return Torrent(**params)
 
     def get_by_rss(self, url):
@@ -98,8 +100,16 @@ class Client:
             raise NcoreConnectionError("Error while get activity. Url: '{}'. {}".format(URLs.ACTIVITY.value, e))
 
         torrents = []
-        for id in self._activity_parser.get_ids(content.text):
-            torrents.append(self.get_torrent(id))
+        for id, start_t, updated_t, status, uploaded, downloaded, remaining_t, rate in \
+            self._activity_parser.get_params(content.text):
+            torrents.append(self.get_torrent(id,
+                                             start=start_t,
+                                             updated=updated_t,
+                                             status=status,
+                                             uploaded=Size(uploaded),
+                                             downloaded=Size(downloaded),
+                                             remaining=remaining_t,
+                                             rate=float(rate)))
         return torrents
 
     def get_recommended(self, type=None):

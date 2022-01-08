@@ -88,10 +88,22 @@ class RssParser:
 
 class ActivityParser:
     def __init__(self):
-        self.action_pattern = re.compile(r'onclick="torrent\((.*?)\);')
+        self.patterns = [
+            re.compile(r'onclick="torrent\((.*?)\);'),
+            re.compile(r'<div class="hnr_tstart">(.*?)<\/div>'),
+            re.compile(r'<div class="hnr_tlastactive">(.*?)<\/div>'),
+            re.compile(r'<div class="hnr_tseed"><span class=".*?">(.*?)<\/span><\/div>'),
+            re.compile(r'<div class="hnr_tup">(.*?)<\/div>'),
+            re.compile(r'<div class="hnr_tdown">(.*?)<\/div>'),
+            re.compile(r'<div class="hnr_ttimespent"><span class=".*?">(.*?)<\/span><\/div>'),
+            re.compile(r'<div class="hnr_tratio"><span class=".*?">(.*?)<\/span><\/div>')
+        ]
 
-    def get_ids(self, data):
-        return self.action_pattern.findall(data)
+    def get_params(self, data):
+        out = []
+        for parser in self.patterns:
+            out.append(parser.findall(data))
+        return tuple(zip(*out))
 
 
 class RecommendedParser:
