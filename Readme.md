@@ -1,6 +1,6 @@
 ![Build](https://img.shields.io/github/workflow/status/radaron/ncoreparser/Python%20application?style=for-the-badge)
-![pypi](https://img.shields.io/pypi/v/ncoreparser?style=for-the-badge)
-![downloads](https://img.shields.io/pypi/dm/ncoreparser?style=for-the-badge)
+[![pypi](https://img.shields.io/pypi/v/ncoreparser?style=for-the-badge)](https://pypi.org/project/ncoreparser/)
+[![downloads](https://img.shields.io/pypi/dm/ncoreparser?style=for-the-badge)](https://pypi.org/project/ncoreparser/)
 ![license](https://img.shields.io/github/license/radaron/ncoreparser?style=for-the-badge)
 
 # Ncoreparser
