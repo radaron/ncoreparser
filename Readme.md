@@ -94,7 +94,8 @@ This example get all torrents and their informations from the Hit&run page
 
         torrents = client.get_by_activity()
         for torrent in torrents:
-            print(torrent['title'], torrent['type'], torrent['size'], torrent['id'], torrent['rate'], torrent['remaining'])
+            print(torrent['title'], torrent['type'], torrent['size'],
+                  torrent['id'], torrent['rate'], torrent['remaining'])
 
         client.close()
 ```
