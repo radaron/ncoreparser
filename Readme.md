@@ -25,94 +25,91 @@ pip install ncoreparser
 Get most seeded torrents from all category
 
 ``` python
+from ncoreparser import Client, SearchParamWhere, SearchParamType, ParamSort, ParamSeq
 
-    from ncoreparser import Client, SearchParamWhere, SearchParamType, ParamSort, ParamSeq
 
+if __name__ == "__main__":
+    client = Client()
+    client.open("<username>", "<password>")
 
-    if __name__ == "__main__":
-        client = Client()
-        client.open("<username>", "<password>")
+    for t_type in SearchParamType:
+        torrent = client.search(pattern="", type=t_type, number=1,
+                                sort_by=ParamSort.SEEDERS, sort_order=ParamSeq.DECREASING)[0]
+        print(torrent['title'], torrent['type'], torrent['size'], torrent['id'])
 
-        for t_type in SearchParamType:
-            torrent = client.search(pattern="", type=t_type, number=1,
-                                    sort_by=ParamSort.SEEDERS, sort_order=ParamSeq.DECREASING)[0]
-            print(torrent['title'], torrent['type'], torrent['size'], torrent['id'])
-
-        client.close()
+    client.close()
 ```
 
 ### Download torrent
 This example download Forest gump torrent file and save it to temp folder
 
 ``` python
-
-    from ncoreparser import Client, SearchParamWhere, SearchParamType, ParamSort, ParamSeq
-
-
-    if __name__ == "__main__":
-        client = Client()
-        client.open("<username>", "<password>")
+from ncoreparser import Client, SearchParamWhere, SearchParamType, ParamSort, ParamSeq
 
 
-        torrent = client.search(pattern="Forrest gump", type=SearchParamType.SD_HUN, number=1,
-                                sort_by=ParamSort.SEEDERS, sort_order=ParamSeq.DECREASING)[0]
+if __name__ == "__main__":
+    client = Client()
+    client.open("<username>", "<password>")
 
-        client.download(torrent, "/tmp")
-        client.close()
+
+    torrent = client.search(pattern="Forrest gump", type=SearchParamType.SD_HUN, number=1,
+                            sort_by=ParamSort.SEEDERS, sort_order=ParamSeq.DECREASING)[0]
+
+    client.download(torrent, "/tmp")
+    client.close()
 ```
 
 ### Download torrent by rssfeed
 This example get all torrents and their informations from an ncore bookmark (rss feed)
 
 ``` python
+from ncoreparser import Client
 
-    from ncoreparser import Client
 
+if __name__ == "__main__":
+    client = Client()
+    client.open("<username>", "<password>")
 
-    if __name__ == "__main__":
-        client = Client()
-        client.open("<username>", "<password>")
+    torrents = client.get_by_rss("<rss url>")
+    for torrent in torrents:
+        print(torrent['title'], torrent['type'], torrent['size'], torrent['id'])
 
-        torrents = client.get_by_rss("<rss url>")
-        for torrent in torrents:
-            print(torrent['title'], torrent['type'], torrent['size'], torrent['id'])
-
-        client.close()
+    client.close()
 ```
 
 ### Get torrents by activity
 This example get all torrents and their informations from the Hit&run page
 
 ``` python
+from ncoreparser import Client
 
-    from ncoreparser import Client
 
-    if __name__ == "__main__":
-        client = Client()
-        client.open("<username>", "<password>")
+if __name__ == "__main__":
+    client = Client()
+    client.open("<username>", "<password>")
 
-        torrents = client.get_by_activity()
-        for torrent in torrents:
-            print(torrent['title'], torrent['type'], torrent['size'],
-                  torrent['id'], torrent['rate'], torrent['remaining'])
+    torrents = client.get_by_activity()
+    for torrent in torrents:
+        print(torrent['title'], torrent['type'], torrent['size'],
+              torrent['id'], torrent['rate'], torrent['remaining'])
 
-        client.close()
+    client.close()
 ```
 
 ### Get recommended torrents
 This example get all torrents and their informations from the recommended page
 
 ``` python
+from ncoreparser import Client, SearchParamType
 
-    from ncoreparser import Client, SearchParamType
 
-    if __name__ == "__main__":
-        client = Client()
-        client.open("<username>", "<password>")
+if __name__ == "__main__":
+    client = Client()
+    client.open("<username>", "<password>")
 
-        torrents = client.get_recommended(type=SearchParamType.SD_HUN)
-        for torrent in torrents:
-            print(torrent['title'], torrent['type'], torrent['size'], torrent['id'])
+    torrents = client.get_recommended(type=SearchParamType.SD_HUN)
+    for torrent in torrents:
+        print(torrent['title'], torrent['type'], torrent['size'], torrent['id'])
 
-        client.close()
+    client.close()
 ```
