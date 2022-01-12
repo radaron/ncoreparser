@@ -14,8 +14,7 @@ This module provides python API-s to manage torrents from ncore.pro eg.: search,
 
 
 ``` bash
-
-   pip install ncoreparser
+pip install ncoreparser
 ```
 
 ## Examples
