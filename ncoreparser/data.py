@@ -48,37 +48,37 @@ class SearchParamType(Enum):
 
 def get_detailed_param(category, type):
     detailed = {
-            "osszes_film_xvid_hun": SearchParamType.SD_HUN,
-            "osszes_film_xvid": SearchParamType.SD,
-            "osszes_film_dvd_hun": SearchParamType.DVD_HUN,
-            "osszes_film_dvd": SearchParamType.DVD,
-            "osszes_film_dvd9_hun": SearchParamType.DVD9_HUN,
-            "osszes_film_dvd9": SearchParamType.DVD9,
-            "osszes_film_hd_hun": SearchParamType.HD_HUN,
-            "osszes_film_hd": SearchParamType.HD,
-            "osszes_sorozat_xvidser_hun": SearchParamType.SDSER_HUN,
-            "osszes_sorozat_xvidser": SearchParamType.SDSER,
-            "osszes_sorozat_dvdser_hun": SearchParamType.DVDSER_HUN,
-            "osszes_sorozat_dvdser": SearchParamType.DVDSER,
-            "osszes_sorozat_hdser_hun": SearchParamType.HDSER_HUN,
-            "osszes_sorozat_hdser": SearchParamType.HDSER,
-            "osszes_zene_mp3_hun": SearchParamType.MP3_HUN,
-            "osszes_zene_mp3": SearchParamType.MP3,
-            "osszes_zene_lossless_hun": SearchParamType.LOSSLESS_HUN,
-            "osszes_zene_lossless": SearchParamType.LOSSLESS,
-            "osszes_zene_clip": SearchParamType.CLIP,
-            "osszes_jatek_game_iso": SearchParamType.GAME_ISO,
-            "osszes_jatek_game_rip": SearchParamType.GAME_RIP,
-            "osszes_jatek_console": SearchParamType.CONSOLE,
-            "osszes_konyv_ebook_hun": SearchParamType.EBOOK_HUN,
-            "osszes_konyv_ebook": SearchParamType.EBOOK,
-            "osszes_program_iso": SearchParamType.ISO,
-            "osszes_program_misc": SearchParamType.MISC,
-            "osszes_program_mobil": SearchParamType.MOBIL,
-            "osszes_xxx_xxx_imageset": SearchParamType.XXX_IMG,
-            "osszes_xxx_xxx_xvid": SearchParamType.XXX_SD,
-            "osszes_xxx_xxx_dvd": SearchParamType.XXX_DVD,
-            "osszes_xxx_xxx_hd": SearchParamType.XXX_HD,
+        "osszes_film_xvid_hun": SearchParamType.SD_HUN,
+        "osszes_film_xvid": SearchParamType.SD,
+        "osszes_film_dvd_hun": SearchParamType.DVD_HUN,
+        "osszes_film_dvd": SearchParamType.DVD,
+        "osszes_film_dvd9_hun": SearchParamType.DVD9_HUN,
+        "osszes_film_dvd9": SearchParamType.DVD9,
+        "osszes_film_hd_hun": SearchParamType.HD_HUN,
+        "osszes_film_hd": SearchParamType.HD,
+        "osszes_sorozat_xvidser_hun": SearchParamType.SDSER_HUN,
+        "osszes_sorozat_xvidser": SearchParamType.SDSER,
+        "osszes_sorozat_dvdser_hun": SearchParamType.DVDSER_HUN,
+        "osszes_sorozat_dvdser": SearchParamType.DVDSER,
+        "osszes_sorozat_hdser_hun": SearchParamType.HDSER_HUN,
+        "osszes_sorozat_hdser": SearchParamType.HDSER,
+        "osszes_zene_mp3_hun": SearchParamType.MP3_HUN,
+        "osszes_zene_mp3": SearchParamType.MP3,
+        "osszes_zene_lossless_hun": SearchParamType.LOSSLESS_HUN,
+        "osszes_zene_lossless": SearchParamType.LOSSLESS,
+        "osszes_zene_clip": SearchParamType.CLIP,
+        "osszes_jatek_game_iso": SearchParamType.GAME_ISO,
+        "osszes_jatek_game_rip": SearchParamType.GAME_RIP,
+        "osszes_jatek_console": SearchParamType.CONSOLE,
+        "osszes_konyv_ebook_hun": SearchParamType.EBOOK_HUN,
+        "osszes_konyv_ebook": SearchParamType.EBOOK,
+        "osszes_program_iso": SearchParamType.ISO,
+        "osszes_program_misc": SearchParamType.MISC,
+        "osszes_program_mobil": SearchParamType.MOBIL,
+        "osszes_xxx_xxx_imageset": SearchParamType.XXX_IMG,
+        "osszes_xxx_xxx_xvid": SearchParamType.XXX_SD,
+        "osszes_xxx_xxx_dvd": SearchParamType.XXX_DVD,
+        "osszes_xxx_xxx_hd": SearchParamType.XXX_HD,
     }.get("{}_{}".format(category, type), None)
 
     if detailed is None:
@@ -104,11 +104,11 @@ class URLs(Enum):
     ACTIVITY = "https://ncore.pro/hitnrun.php"
     RECOMMENDED = "https://ncore.pro/recommended.php"
     TORRENTS_BASE = "https://ncore.pro/torrents.php"
-    DOWNLOAD_PATTERN = TORRENTS_BASE+"?oldal={page}" \
-                                     "&tipus={t_type}" \
-                                     "&miszerint={sort}" \
-                                     "&hogyan={seq}" \
-                                     "&mire={pattern}" \
-                                     "&miben={where}"
-    DETAIL_PATTERN = TORRENTS_BASE+"?action=details&id={id}"
+    DOWNLOAD_PATTERN = TORRENTS_BASE + "?oldal={page}" \
+                                       "&tipus={t_type}" \
+                                       "&miszerint={sort}" \
+                                       "&hogyan={seq}" \
+                                       "&mire={pattern}" \
+                                       "&miben={where}"
+    DETAIL_PATTERN = TORRENTS_BASE + "?action=details&id={id}"
     DOWNLOAD_LINK = "https://ncore.pro/torrents.php?action=download&id={id}&key={key}"

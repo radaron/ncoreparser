@@ -20,7 +20,7 @@ class Size:
 
     def _parse_str(self, size):
         size, unit = size.split(" ")
-        self._size = float(size)*self.unit_size[unit]
+        self._size = float(size) * self.unit_size[unit]
         self._unit = unit
 
     def __str__(self):
@@ -38,7 +38,7 @@ class Size:
         size = self._size + obj._size
         unit = self._unit
         for u, multiplier in self.unit_size.items():
-            if 0 < int(self._size/multiplier) <= 1000:
+            if 0 < int(self._size / multiplier) <= 1000:
                 unit = u
                 break
         return Size(size, unit)
@@ -47,7 +47,7 @@ class Size:
         self._check_obj(obj)
         self._size = self._size + obj._size
         for unit, multiplier in self.unit_size.items():
-            if 0 < int(self._size/multiplier) <= 1000:
+            if 0 < int(self._size / multiplier) <= 1000:
                 self._unit = unit
                 break
         return self

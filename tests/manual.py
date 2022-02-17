@@ -5,11 +5,11 @@ from ncoreparser import Client, SearchParamType, ParamSort, ParamSeq
 
 def print_category(msg):
     print("")
-    print("*{:175}*".format("-"*175))
+    print("*{:175}*".format("-" * 175))
     print("|{:^175}|".format(msg))
-    print("*{:^100}*{:^30}*{:^10}*{:^10}*{:^10}*{:^10}*".format("-"*100, "-"*30, "-"*10, "-"*10, "-"*10, "-"*10))
+    print("*{:^100}*{:^30}*{:^10}*{:^10}*{:^10}*{:^10}*".format("-" * 100, "-" * 30, "-" * 10, "-" * 10, "-" * 10, "-" * 10))
     print("|{:^100}|{:^30}|{:^10}|{:^10}|{:^10}|{:^10}|".format("Title", "Type", "Size", "ID", "Seed", "Leech"))
-    print("*{:^100}*{:^30}*{:^10}*{:^10}*{:^10}*{:^10}*".format("-"*100, "-"*30, "-"*10, "-"*10, "-"*10, "-"*10))
+    print("*{:^100}*{:^30}*{:^10}*{:^10}*{:^10}*{:^10}*".format("-" * 100, "-" * 30, "-" * 10, "-" * 10, "-" * 10, "-" * 10))
 
 
 def pretty_print(torrent):
@@ -19,7 +19,7 @@ def pretty_print(torrent):
                                                                 str(torrent['id']),
                                                                 torrent['seed'],
                                                                 torrent['leech']))
-    print("*{:^100}*{:^30}*{:^10}*{:^10}*{:^10}*{:^10}*".format("-"*100, "-"*30, "-"*10, "-"*10, "-"*10, "-"*10))
+    print("*{:^100}*{:^30}*{:^10}*{:^10}*{:^10}*{:^10}*".format("-" * 100, "-" * 30, "-" * 10, "-" * 10, "-" * 10, "-" * 10))
 
 
 parser = argparse.ArgumentParser()
@@ -68,5 +68,5 @@ if __name__ == "__main__":
     client.close()
     end = time.time()
 
-    diff = end-start
+    diff = end - start
     print("\nElapsed time: {} sec.".format(diff))
