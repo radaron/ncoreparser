@@ -58,8 +58,6 @@ class TorrenDetailParser:
                                         r'</a></div>.*?<div class="dt">Leecherek:</div>.*?<div class="dd"><a onclick=".*?">'
                                         r'(?P<leech>[0-9]+)</a></div>', re.DOTALL)
 
-
-
     def get_item(self, data):
         try:
             t_type = self.type_pattern.search(data)

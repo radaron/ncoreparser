@@ -1,4 +1,3 @@
-import sys
 import time
 import argparse
 from ncoreparser import Client, SearchParamType, ParamSort, ParamSeq
@@ -15,12 +14,13 @@ def print_category(msg):
 
 def pretty_print(torrent):
     print("|{:^100}|{:^30}|{:^10}|{:^10}|{:^10}|{:^10}|".format(torrent['title'],
-                                                 torrent['type'],
-                                                 str(torrent['size']),
-                                                 str(torrent['id']),
-                                                 torrent['seed'],
-                                                 torrent['leech']))
+                                                                torrent['type'],
+                                                                str(torrent['size']),
+                                                                str(torrent['id']),
+                                                                torrent['seed'],
+                                                                torrent['leech']))
     print("*{:^100}*{:^30}*{:^10}*{:^10}*{:^10}*{:^10}*".format("-"*100, "-"*30, "-"*10, "-"*10, "-"*10, "-"*10))
+
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--user', '-u', required=True, type=str)
