@@ -21,7 +21,7 @@ jobs:
         python-version: '3.8'
     - name: Poetry Install
       uses: knowsuchagency/poetry-install@v2
-    - name: Publish package
-      uses: bjoluc/semantic-release-config-poetry@v1
+    - name: Build and publish python poetry package
+      uses: JRubics/poetry-publish@v1.10
       with:
         pypi_token: ${{ secrets.PYPI_TOKEN }}
