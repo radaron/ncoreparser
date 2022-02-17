@@ -49,12 +49,12 @@ class Client:
             raise NcoreCredentialError("Error while login, check "
                                        "credentials for user: '{}'".format(username))
 
-    def search(self, pattern, type=SearchParamType.ALL_OWN,  where=SearchParamWhere.NAME,
+    def search(self, pattern, type=SearchParamType.ALL_OWN, where=SearchParamWhere.NAME,
                sort_by=ParamSort.UPLOAD, sort_order=ParamSeq.DECREASING, number=TORRENTS_PER_PAGE):
         page_count = 0
         torrents = []
         while page_count * TORRENTS_PER_PAGE < number:
-            url = URLs.DOWNLOAD_PATTERN.value.format(page=page_count+1,
+            url = URLs.DOWNLOAD_PATTERN.value.format(page=page_count + 1,
                                                      t_type=type.value,
                                                      sort=sort_by.value,
                                                      seq=sort_order.value,
@@ -101,7 +101,7 @@ class Client:
 
         torrents = []
         for id, start_t, updated_t, status, uploaded, downloaded, remaining_t, rate in \
-            self._activity_parser.get_params(content.text):
+                self._activity_parser.get_params(content.text):
             torrents.append(self.get_torrent(id,
                                              start=start_t,
                                              updated=updated_t,

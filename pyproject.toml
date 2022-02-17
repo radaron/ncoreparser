@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "ncoreparser"
+version = "1.7.3"
+description = "Package to download from ncore.pro"
+authors = ["Aron Radics <aron.radics.jozsef@gmail.com>"]
+license = "MIT"
+readme = "Readme.md"
+homepage = "https://github.com/radaron/ncoreparser"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+requests = "^2.23.0"
+
+[tool.poetry.dev-dependencies]
+pytest = "*"
+flake8 = "*"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
