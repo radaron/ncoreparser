@@ -1,9 +1,8 @@
 name: Upload Python Package
 
 on:
-  # the 1st condition
   workflow_run:
-    workflows: ["Python application"]
+    workflows: ["Unit tests"]
     branches: [master]
     types:
       - completed
