@@ -134,4 +134,5 @@ class Client:
         return file_path
 
     def close(self):
+        self._session.cookies.clear()
         self._session.close()
