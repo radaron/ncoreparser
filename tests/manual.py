@@ -35,7 +35,7 @@ if __name__ == "__main__":
 
     print("Login")
     client = Client(timeout=5)
-    client.open(args.user, args.passw)
+    client.login(args.user, args.passw)
 
     print_category("Most seeded torrents/category")
     for t_type in SearchParamType:
@@ -65,7 +65,7 @@ if __name__ == "__main__":
     for torrent in torrents:
         pretty_print(torrent)
 
-    client.close()
+    client.logout()
     end = time.time()
 
     diff = end - start

@@ -47,7 +47,7 @@ class Client:
         self._recommended_parser = RecommendedParser()
         self.timeout = timeout
 
-    def open(self, username, password):
+    def login(self, username, password):
         self._session.cookies.clear()
         try:
             r = self._session.post(URLs.LOGIN.value,
@@ -57,7 +57,7 @@ class Client:
             raise NcoreConnectionError("Error while perform post "
                                        "method to url '{}'.".format(URLs.LOGIN.value))
         if r.url != URLs.INDEX.value:
-            self.close()
+            self.logout()
             raise NcoreCredentialError("Error while login, check "
                                        "credentials for user: '{}'".format(username))
         self._logged_in = True
@@ -152,7 +152,7 @@ class Client:
             fh.write(content.content)
         return file_path
 
-    def close(self):
+    def logout(self):
         self._session.cookies.clear()
         self._session.close()
         self._logged_in = False

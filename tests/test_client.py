@@ -14,7 +14,7 @@ class TestClient:
 
         monkeypatch.setattr(requests, "session", session)
         c = Client()
-        c.open("username", "password")
+        c.login("username", "password")
 
     def test_credentials_con_error(self, monkeypatch):
         session = MagicMock()
@@ -23,7 +23,7 @@ class TestClient:
         monkeypatch.setattr(requests, "session", session)
         with pytest.raises(NcoreConnectionError):
             c = Client()
-            c.open("username", "password")
+            c.login("username", "password")
 
     def test_invalid_credentials(self, monkeypatch):
         session = MagicMock()
@@ -32,4 +32,4 @@ class TestClient:
         monkeypatch.setattr(requests, "session", session)
         with pytest.raises(NcoreCredentialError):
             c = Client()
-            c.open("username", "password")
+            c.login("username", "password")

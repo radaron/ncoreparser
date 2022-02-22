@@ -30,14 +30,14 @@ from ncoreparser import Client, SearchParamWhere, SearchParamType, ParamSort, Pa
 
 if __name__ == "__main__":
     client = Client()
-    client.open("<username>", "<password>")
+    client.login("<username>", "<password>")
 
     for t_type in SearchParamType:
         torrent = client.search(pattern="", type=t_type, number=1,
                                 sort_by=ParamSort.SEEDERS, sort_order=ParamSeq.DECREASING)[0]
         print(torrent['title'], torrent['type'], torrent['size'], torrent['id'])
 
-    client.close()
+    client.logout()
 ```
 
 ### Download torrent
@@ -49,14 +49,14 @@ from ncoreparser import Client, SearchParamWhere, SearchParamType, ParamSort, Pa
 
 if __name__ == "__main__":
     client = Client()
-    client.open("<username>", "<password>")
+    client.login("<username>", "<password>")
 
 
     torrent = client.search(pattern="Forrest gump", type=SearchParamType.SD_HUN, number=1,
                             sort_by=ParamSort.SEEDERS, sort_order=ParamSeq.DECREASING)[0]
 
     client.download(torrent, "/tmp")
-    client.close()
+    client.logout()
 ```
 
 ### Download torrent by rssfeed
@@ -68,13 +68,13 @@ from ncoreparser import Client
 
 if __name__ == "__main__":
     client = Client()
-    client.open("<username>", "<password>")
+    client.login("<username>", "<password>")
 
     torrents = client.get_by_rss("<rss url>")
     for torrent in torrents:
         print(torrent['title'], torrent['type'], torrent['size'], torrent['id'])
 
-    client.close()
+    client.logout()
 ```
 
 ### Get torrents by activity
@@ -86,14 +86,14 @@ from ncoreparser import Client
 
 if __name__ == "__main__":
     client = Client()
-    client.open("<username>", "<password>")
+    client.login("<username>", "<password>")
 
     torrents = client.get_by_activity()
     for torrent in torrents:
         print(torrent['title'], torrent['type'], torrent['size'],
               torrent['id'], torrent['rate'], torrent['remaining'])
 
-    client.close()
+    client.logout()
 ```
 
 ### Get recommended torrents
@@ -105,11 +105,11 @@ from ncoreparser import Client, SearchParamType
 
 if __name__ == "__main__":
     client = Client()
-    client.open("<username>", "<password>")
+    client.login("<username>", "<password>")
 
     torrents = client.get_recommended(type=SearchParamType.SD_HUN)
     for torrent in torrents:
         print(torrent['title'], torrent['type'], torrent['size'], torrent['id'])
 
-    client.close()
+    client.logout()
 ```
