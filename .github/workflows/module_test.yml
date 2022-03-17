@@ -1,0 +1,30 @@
+name: Test module
+
+on:
+  schedule:
+  - cron: "0 0 * * *"
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-python@v2
+      with:
+        python-version: "3.8"
+    - name: Install dependencies
+      working-directory: ./tests/test_module
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    - name: Run tests
+      working-directory: ./tests/test_module
+      run: |
+        python -m pytest test.py
+      env:
+        NCORE_USER: ${{ secrets.NCORE_USER }}
+        NCORE_PASS: ${{ secrets.NCORE_PASS }}
+        RSS_URL: ${{ secrets.RSS_URL }}
+
