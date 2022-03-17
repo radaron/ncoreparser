@@ -1,4 +1,4 @@
-name: Test module
+name: Module test
 
 on:
   schedule:
