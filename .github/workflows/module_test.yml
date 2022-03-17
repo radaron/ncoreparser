@@ -1,14 +1,11 @@
 name: Module test
-
-on:
+on: 
   schedule:
-  - cron: "*/5 * * * *"
+  - cron: '*/5 * * * *'
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-python@v2
@@ -27,4 +24,3 @@ jobs:
         NCORE_USER: ${{ secrets.NCORE_USER }}
         NCORE_PASS: ${{ secrets.NCORE_PASS }}
         RSS_URL: ${{ secrets.RSS_URL }}
-
