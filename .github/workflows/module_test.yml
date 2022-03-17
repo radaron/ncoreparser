@@ -1,7 +1,7 @@
 name: Module test
 on: 
   schedule:
-  - cron: '*/5 * * * *'
+  - cron: '0 7,17 * * *'
 
 jobs:
   build:
