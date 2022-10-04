@@ -70,8 +70,6 @@ class TorrenDetailParser:
             seed = peers.group('seed')
             leech = peers.group('leech')
         except AttributeError as e:
-            with open("/home/aron/Asztal/test.html", 'w') as f:
-                f.write(data)
             raise NcoreParserError("Error while parsing by detailed page. {}".format(e))
         return {"title": title, "key": key, "date": date, "size": size, "type": t_type, 'seed': seed, 'leech': leech}
 
