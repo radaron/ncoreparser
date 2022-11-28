@@ -22,6 +22,6 @@ jobs:
       uses: knowsuchagency/poetry-install@v2
     - name: Build and publish python poetry package
       run: |
-        poetry publish --build || true
+        poetry publish --build --skip-existing
       env:
         POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_TOKEN }}
