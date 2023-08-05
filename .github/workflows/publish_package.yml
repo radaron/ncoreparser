@@ -17,11 +17,12 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: '3.8'
-    - name: Poetry Install
-      uses: knowsuchagency/poetry-install@v2
-    - name: Build and publish python poetry package
+        python-version: '3.9'
+    - name: Build and upload package
       run: |
-        poetry publish --build --skip-existing
+        python -m pip install --upgrade twine build
+        python -m build
+        python -m twine upload dist/*
       env:
-        POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_TOKEN }}
+        TWINE_USERNAME: __token__
+        TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}

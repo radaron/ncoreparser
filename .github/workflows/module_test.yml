@@ -1,5 +1,5 @@
 name: Module test
-on: 
+on:
   schedule:
   - cron: '0 7,17 * * *'
 
@@ -10,7 +10,7 @@ jobs:
     - uses: actions/checkout@v2
     - uses: actions/setup-python@v2
       with:
-        python-version: "3.8"
+        python-version: "3.9"
     - name: Install dependencies
       working-directory: ./tests/test_module
       run: |
