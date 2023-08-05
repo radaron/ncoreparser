@@ -53,7 +53,7 @@ class TorrenDetailParser:
         self.date_pattern = re.compile(r'<div class="dd">(?P<date>[0-9]{4}\-[0-9]{2}\-[0-9]{2}\ '
                                        r'[0-9]{2}\:[0-9]{2}\:[0-9]{2})</div>')
         self.title_pattern = re.compile(r'<div class="torrent_reszletek_cim">(?P<title>.*?)</div>')
-        self.size_pattern = re.compile(r'<div class="dd">(?P<size>[0-9,.]+\ [K,M,G]{1}iB)\ \(.*?\)</div>')
+        self.size_pattern = re.compile(r'<div class="dd">(?P<size>[0-9,.]+\ [K,M,G,T]{1}iB)\ \(.*?\)</div>')
         self.peers_pattern = re.compile(r'div class="dt">Seederek:</div>.*?<div class="dd"><a onclick=".*?">(?P<seed>[0-9]+)'
                                         r'</a></div>.*?<div class="dt">Leecherek:</div>.*?<div class="dd"><a onclick=".*?">'
                                         r'(?P<leech>[0-9]+)</a></div>', re.DOTALL)
