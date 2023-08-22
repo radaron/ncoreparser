@@ -5,3 +5,4 @@ build/
 dist/
 ncoreparser.egg-info/
 .venv
+.vscode

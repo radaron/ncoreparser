@@ -37,28 +37,28 @@ if __name__ == "__main__":
     client = Client(timeout=5)
     client.login(args.user, args.passw)
 
-    #print_category("Most seeded torrents/category")
-    #for t_type in SearchParamType:
-    #    torrent = client.search(pattern="", type=t_type, number=1,
-    #                            sort_by=ParamSort.SEEDERS, sort_order=ParamSeq.DECREASING)[0]
-    #    pretty_print(torrent)
+    print_category("Most seeded torrents/category")
+    for t_type in SearchParamType:
+        torrent = client.search(pattern="", type=t_type, number=1,
+                                sort_by=ParamSort.SEEDERS, sort_order=ParamSeq.DECREASING)[0]
+        pretty_print(torrent)
 
-    #print("")
-    #print("Donwnload torrent")
-    #torrent = client.search(pattern="Forrest gump", type=SearchParamType.SD_HUN, number=1,
-    #                        sort_by=ParamSort.SEEDERS, sort_order=ParamSeq.DECREASING)[0]
+    print("")
+    print("Donwnload torrent")
+    torrent = client.search(pattern="Forrest gump", type=SearchParamType.SD_HUN, number=1,
+                            sort_by=ParamSort.SEEDERS, sort_order=ParamSeq.DECREASING)[0]
 
-    #client.download(torrent, "/tmp", override=True)
+    client.download(torrent, "/tmp", override=True)
 
-    #print_category("List by rss")
-    #torrents = client.get_by_rss(args.rss_feed)
-    #for torrent in torrents:
-    #    pretty_print(torrent)
+    print_category("List by rss")
+    torrents = client.get_by_rss(args.rss_feed)
+    for torrent in torrents:
+        pretty_print(torrent)
 
-    #print_category("List by activity")
-    #torrents = client.get_by_activity()
-    #for torrent in torrents:
-    #    pretty_print(torrent)
+    print_category("List by activity")
+    torrents = client.get_by_activity()
+    for torrent in torrents:
+        pretty_print(torrent)
 
     print_category("List by recommended")
     torrents = client.get_recommended(type=SearchParamType.SD_HUN)
