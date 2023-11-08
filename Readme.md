@@ -50,7 +50,7 @@ if __name__ == "__main__":
     client.login("<username>", "<password>")
 
 
-    torrent = client.search(pattern="Forrest gump", type=SearchParamType.SD_HUN, number=1,
+    torrent = client.search(pattern="Forrest gump", type=SearchParamType.HD_HUN, number=1,
                             sort_by=ParamSort.SEEDERS, sort_order=ParamSeq.DECREASING)[0]
 
     client.download(torrent, "/tmp")
@@ -105,7 +105,7 @@ if __name__ == "__main__":
     client = Client()
     client.login("<username>", "<password>")
 
-    torrents = client.get_recommended(type=SearchParamType.SD_HUN)
+    torrents = client.get_recommended(type=SearchParamType.HD_HUN)
     for torrent in torrents:
         print(torrent['title'], torrent['type'], torrent['size'], torrent['id'])
 
