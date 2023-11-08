@@ -45,7 +45,7 @@ if __name__ == "__main__":
 
     print("")
     print("Donwnload torrent")
-    torrent = client.search(pattern="Forrest gump", type=SearchParamType.SD_HUN, number=1,
+    torrent = client.search(pattern="Forrest gump", type=SearchParamType.HD_HUN, number=1,
                             sort_by=ParamSort.SEEDERS, sort_order=ParamSeq.DECREASING)[0]
 
     client.download(torrent, "/tmp", override=True)
@@ -61,7 +61,7 @@ if __name__ == "__main__":
         pretty_print(torrent)
 
     print_category("List by recommended")
-    torrents = client.get_recommended(type=SearchParamType.SD_HUN)
+    torrents = client.get_recommended(type=SearchParamType.HDSER_HUN)
     for torrent in torrents:
         pretty_print(torrent)
 

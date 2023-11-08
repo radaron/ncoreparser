@@ -32,15 +32,15 @@ class TestNcoreParser:
         assert "FORREST" in torrent["title"].upper()
 
     def test_recommended(self, client):
-        torrents = client.get_recommended(SearchParamType.SDSER_HUN)
+        torrents = client.get_recommended(SearchParamType.HDSER_HUN)
 
         assert len(torrents) > 0
         for torrent in torrents:
             assert isinstance(torrent, Torrent)
-            assert torrent["type"] == SearchParamType.SDSER_HUN
+            assert torrent["type"] == SearchParamType.HDSER_HUN
 
     def test_download(self, client):
-        torrent = client.search(pattern="forrest gump", type=SearchParamType.SD_HUN, number=1)[0]
+        torrent = client.search(pattern="forrest gump", type=SearchParamType.HD_HUN, number=1)[0]
 
         client.download(torrent, ".", override=True)
 
