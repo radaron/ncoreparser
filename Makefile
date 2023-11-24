@@ -34,8 +34,8 @@ build:
 	$(ACTIVATE) && python -m build
 
 git-tag:
-	tag=v$(grep 'version' pyproject.toml | cut -d '"' -f2)
-	git tag ${tag}
+	git tag $(shell grep 'version' pyproject.toml | cut -d '"' -f2)
+	git push --tags
 
 clean:
 	rm -rf .venv
