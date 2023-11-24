@@ -33,5 +33,9 @@ build:
 	$(ACTIVATE) && pip install --upgrade build
 	$(ACTIVATE) && python -m build
 
+git-tag:
+	tag=v$(grep 'version' pyproject.toml | cut -d '"' -f2)
+	git tag ${tag}
+
 clean:
 	rm -rf .venv
