@@ -24,7 +24,6 @@ jobs:
         python -m build
         python -m twine upload dist/*
         make git-tag
-        git push --tags
       env:
         TWINE_USERNAME: __token__
         TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
