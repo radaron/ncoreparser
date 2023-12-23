@@ -47,13 +47,6 @@ class Client:
         self._activity_parser = ActivityParser()
         self._recommended_parser = RecommendedParser()
 
-    def open(self, *args, **kwargs):
-        print("Deprecation warning! Use login instead!")
-        self.login(*args, **kwargs)
-
-    def close(self, *args, **kwargs):
-        print("Deprecation warning! Use logout instead!")
-        self.logout(*args, **kwargs)
 
     def login(self, username, password):
         self._client.cookies.clear()
