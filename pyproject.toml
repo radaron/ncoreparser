@@ -15,6 +15,10 @@ dependencies = [
   "httpx>=0.26.0",
 ]
 
+[project.urls]
+Repository = "https://github.com/radaron/ncoreparser.git"
+
+
 [project.optional-dependencies]
 dev = ["pytest", "pylint"]
 
