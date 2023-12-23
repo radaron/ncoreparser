@@ -13,5 +13,3 @@ from .error import (
     NcoreConnectionError
 )
 from .util import Size
-
-__name__ = "ncoreparser"

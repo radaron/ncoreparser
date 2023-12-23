@@ -15,7 +15,7 @@ class Size:
         self._size = 0  # in bytes
         if isinstance(size, str):
             self._parse_str(size)
-        elif isinstance(size, int) or isinstance(size, float):
+        elif isinstance(size, (int, float)):
             self._size = size
 
     def _parse_str(self, size):
@@ -24,14 +24,14 @@ class Size:
         self._unit = unit
 
     def __str__(self):
-        return "{:.2f} {}".format(self.size, self.unit)
+        return f"{self.size:.2f} {self.unit}"
 
     def __repr__(self):
-        return "{:.2f} {}".format(self.size, self.unit)
+        return f"{self.size:.2f} {self.unit}"
 
     def _check_obj(self, obj):
         if not isinstance(obj, Size):
-            raise Exception("Error while perform operaton with Size and {}".format(type(obj)))
+            raise ValueError(f"Error while perform operaton with Size and {type(obj)}")
 
     def __add__(self, obj):
         self._check_obj(obj)
@@ -82,4 +82,4 @@ class Size:
 
 
 def parse_datetime(date, time):
-    return datetime.datetime.strptime("{}_{}".format(date, time), "%Y-%m-%d_%H:%M:%S")
+    return datetime.datetime.strptime(f"{date}_{time}", "%Y-%m-%d_%H:%M:%S")

@@ -17,14 +17,13 @@ class TorrentsPageParser:
         self.leechers_pattern = re.compile(r'<div class="box_l2"><a class="torrent" href=".*">([0-9]+)</a></div>')
 
     @staticmethod
-    def _get_key(data):
+    def get_key(data):
         key_pattern = r'<link rel="alternate" href=".*?\/rss.php\?key=(?P<key>[a-z,0-9]+)" title=".*"'
         find = re.search(key_pattern, data)
         if find:
             return find.group("key")
-        else:
-            raise NcoreParserError("Error while read user "
-                                   "key with pattern: {}".format(key_pattern))
+        raise NcoreParserError(f"Error while read user "
+                               f"key with pattern: {key_pattern}")
 
     def get_items(self, data):
         types = self.type_pattern.findall(data)
@@ -33,15 +32,16 @@ class TorrentsPageParser:
         sizes = self.size_pattern.findall(data)
         seed = self.seeders_pattern.findall(data)
         leech = self.leechers_pattern.findall(data)
-        if len(types) != 0 and len(types) == len(ids_names) == len(dates_times) == len(sizes) == len(seed) == len(leech):
+        if len(types) != 0 and len(types) == len(ids_names) == \
+            len(dates_times) == len(sizes) == len(seed) == len(leech):
             ids, names = zip(*ids_names)
             dates, times = zip(*dates_times)
-            key = self._get_key(data)
+            key = self.get_key(data)
         else:
             if not self.not_found_pattern.search(data):
-                raise NcoreParserError("Error while parse download items in {}.".format(self.__class__.__name__))
-        for i in range(0, len(types)):
-            yield {"id": ids[i], "title": names[i], "key": key, "date": parse_datetime(dates[i], times[i]),
+                raise NcoreParserError(f"Error while parse download items in {self.__class__.__name__}.")
+        for i, id in enumerate(ids):
+            yield {"id": id, "title": names[i], "key": key, "date": parse_datetime(dates[i], times[i]),
                    "size": Size(sizes[i]), "type": SearchParamType(types[i]), "seed": seed[i], "leech": leech[i]}
 
 
@@ -54,9 +54,9 @@ class TorrenDetailParser:
                                        r'[0-9]{2}\:[0-9]{2}\:[0-9]{2})</div>')
         self.title_pattern = re.compile(r'<div class="torrent_reszletek_cim">(?P<title>.*?)</div>')
         self.size_pattern = re.compile(r'<div class="dd">(?P<size>[0-9,.]+\ [K,M,G,T]{1}iB)\ \(.*?\)</div>')
-        self.peers_pattern = re.compile(r'div class="dt">Seederek:</div>.*?<div class="dd"><a onclick=".*?">(?P<seed>[0-9]+)'
-                                        r'</a></div>.*?<div class="dt">Leecherek:</div>.*?<div class="dd"><a onclick=".*?">'
-                                        r'(?P<leech>[0-9]+)</a></div>', re.DOTALL)
+        self.peers_pattern = re.compile(r'div class="dt">Seederek:</div>.*?<div class="dd"><a onclick=".*?">'
+                                        r'(?P<seed>[0-9]+)</a></div>.*?<div class="dt">Leecherek:</div>.*?<div '
+                                        r'class="dd"><a onclick=".*?">(?P<leech>[0-9]+)</a></div>', re.DOTALL)
 
     def get_item(self, data):
         try:
@@ -64,13 +64,13 @@ class TorrenDetailParser:
             t_type = get_detailed_param(t_type.group("category"), t_type.group("type"))
             date = datetime.datetime.strptime(self.date_pattern.search(data).group("date"), "%Y-%m-%d %H:%M:%S")
             title = self.title_pattern.search(data).group("title")
-            key = TorrentsPageParser._get_key(data)
+            key = TorrentsPageParser.get_key(data)
             size = Size(self.size_pattern.search(data).group("size"))
             peers = self.peers_pattern.search(data)
             seed = peers.group('seed')
             leech = peers.group('leech')
         except AttributeError as e:
-            raise NcoreParserError("Error while parsing by detailed page. {}".format(e))
+            raise NcoreParserError(f"Error while parsing by detailed page. {e}") from e
         return {"title": title, "key": key, "date": date, "size": size, "type": t_type, 'seed': seed, 'leech': leech}
 
 
@@ -104,8 +104,8 @@ class ActivityParser:
 
 class RecommendedParser:
     def __init__(self):
-        self.recommended_pattern = re.compile(r'<a href=".*?torrents.php\?action=details\&id=(.*?)" target=".*?">'
-                                              r'<img src=".*?" width=".*?" height=".*?" border=".*?" title=".*?"\/><\/a>')
+        self.recommended_pattern = re.compile(r'<a href=".*?torrents.php\?action=details\&id=(.*?)" target=".*?"><img'
+                                              r' src=".*?" width=".*?" height=".*?" border=".*?" title=".*?"\/><\/a>')
 
     def get_ids(self, data):
         return self.recommended_pattern.findall(data)

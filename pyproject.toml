@@ -16,4 +16,16 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest", "flake8"]
+dev = ["pytest", "pylint"]
+
+[tool.pylint.'MESSAGES CONTROL']
+disable = [
+  "too-few-public-methods",
+  "missing-module-docstring",
+  "missing-class-docstring",
+  "missing-function-docstring",
+  "redefined-builtin",
+]
+
+[tool.pylint.format]
+max-line-length = 120
