@@ -31,7 +31,7 @@ build:
 	$(ACTIVATE) && python -m build
 
 git-tag:
-	git tag $(shell grep 'version' pyproject.toml | cut -d '"' -f2)
+	git tag v$(shell grep 'version' pyproject.toml | cut -d '"' -f2)
 	git push --tags
 
 clean:
