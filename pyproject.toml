@@ -11,8 +11,9 @@ authors = [
 ]
 license = "MIT"
 readme = "Readme.md"
-homepage = "https://github.com/radaron/ncoreparser"
-dependencies = ["requests>=2.30"]
+dependencies = [
+  "httpx>=0.26.0",
+]
 
 [project.optional-dependencies]
 dev = ["pytest", "flake8"]

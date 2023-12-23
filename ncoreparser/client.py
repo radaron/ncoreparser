@@ -1,6 +1,6 @@
-import requests
 import os
 import functools
+import httpx
 from ncoreparser.data import (
     URLs,
     SearchParamType,
@@ -37,15 +37,15 @@ def _check_login(func):
 
 class Client:
     def __init__(self, timeout=1):
-        self._session = requests.session()
-        self._session.headers.update({'User-Agent': 'python ncoreparser'})
+        self._client = httpx.Client(headers={'User-Agent': 'python ncoreparser'},
+                                    timeout=timeout,
+                                    follow_redirects=True)
         self._logged_in = False
         self._page_parser = TorrentsPageParser()
         self._detailed_parser = TorrenDetailParser()
         self._rss_parser = RssParser()
         self._activity_parser = ActivityParser()
         self._recommended_parser = RecommendedParser()
-        self.timeout = timeout
 
     def open(self, *args, **kwargs):
         print("Deprecation warning! Use login instead!")
@@ -56,14 +56,10 @@ class Client:
         self.logout(*args, **kwargs)
 
     def login(self, username, password):
-        self._session.cookies.clear()
+        self._client.cookies.clear()
         try:
-            r = self._session.post(URLs.LOGIN.value,
-                                   {"nev": username, "pass": password},
-                                   timeout=self.timeout)
-        except Exception:
-            raise NcoreConnectionError("Error while perform post "
-                                       "method to url '{}'.".format(URLs.LOGIN.value))
+            r = self._client.post(URLs.LOGIN.value,
+                                  data={"nev": username, "pass": password})
         if r.url != URLs.INDEX.value:
             self.logout()
             raise NcoreCredentialError("Error while login, check "
@@ -83,7 +79,7 @@ class Client:
                                                      pattern=pattern,
                                                      where=where.value)
             try:
-                request = self._session.get(url, timeout=self.timeout)
+                request = self._client.get(url)
             except Exception as e:
                 raise NcoreConnectionError("Error while searhing torrents. {}".format(e))
             new_torrents = [Torrent(**params) for params in self._page_parser.get_items(request.text)]
@@ -97,7 +93,7 @@ class Client:
     def get_torrent(self, id, **ext_params):
         url = URLs.DETAIL_PATTERN.value.format(id=id)
         try:
-            content = self._session.get(url, timeout=self.timeout)
+            content = self._client.get(url)
         except Exception as e:
             raise NcoreConnectionError("Error while get detailed page. Url: '{}'. {}".format(url, e))
         params = self._detailed_parser.get_item(content.text)
@@ -108,7 +104,7 @@ class Client:
     @_check_login
     def get_by_rss(self, url):
         try:
-            content = self._session.get(url, timeout=self.timeout)
+            content = self._client.get(url)
         except Exception as e:
             raise NcoreConnectionError("Error while get rss. Url: '{}'. {}".format(url, e))
 
@@ -120,7 +116,7 @@ class Client:
     @_check_login
     def get_by_activity(self):
         try:
-            content = self._session.get(URLs.ACTIVITY.value, timeout=self.timeout)
+            content = self._client.get(URLs.ACTIVITY.value)
         except Exception as e:
             raise NcoreConnectionError("Error while get activity. Url: '{}'. {}".format(URLs.ACTIVITY.value, e))
 
@@ -140,7 +136,7 @@ class Client:
     @_check_login
     def get_recommended(self, type=None):
         try:
-            content = self._session.get(URLs.RECOMMENDED.value, timeout=self.timeout)
+            content = self._client.get(URLs.RECOMMENDED.value)
         except Exception as e:
             raise NcoreConnectionError("Error while get recommended. Url: '{}'. {}".format(URLs.RECOMMENDED.value, e))
 
@@ -151,7 +147,7 @@ class Client:
     def download(self, torrent, path, override=False):
         file_path, url = torrent.prepare_download(path)
         try:
-            content = self._session.get(url, timeout=self.timeout)
+            content = self._client.get(url)
         except Exception as e:
             raise NcoreConnectionError("Error while downloading torrent. Url: '{}'. {}".format(url, e))
         if not override and os.path.exists(file_path):
@@ -161,6 +157,6 @@ class Client:
         return file_path
 
     def logout(self):
-        self._session.cookies.clear()
-        self._session.close()
+        self._client.cookies.clear()
+        self._client.close()
         self._logged_in = False
