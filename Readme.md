@@ -111,3 +111,27 @@ if __name__ == "__main__":
 
     client.logout()
 ```
+
+### Async support
+The library also supports async calls. It works same as the sync version, but you have to use the AsyncClient class.
+
+``` python
+import asyncio
+from ncoreparser import AsyncClient, SearchParamWhere, SearchParamType, ParamSort, ParamSeq
+
+
+async def main():
+    client = AsyncClient()
+    await client.login("<username>", "<password>")
+
+    for t_type in SearchParamType:
+        torrent = await client.search(pattern="", type=t_type, number=1,
+                                      sort_by=ParamSort.SEEDERS, sort_order=ParamSeq.DECREASING)[0]
+        print(torrent['title'], torrent['type'], torrent['size'], torrent['id'])
+
+    await client.logout()
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
