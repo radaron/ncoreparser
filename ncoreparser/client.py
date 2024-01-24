@@ -22,7 +22,6 @@ from ncoreparser.parser import (
 )
 from ncoreparser.util import Size
 from ncoreparser.torrent import Torrent
-from ncoreparser.constant import TORRENTS_PER_PAGE
 
 
 def _check_login(func):
@@ -65,11 +64,11 @@ class Client:
     @_check_login
     # pylint: disable=too-many-arguments
     def search(self, pattern, type=SearchParamType.ALL_OWN, where=SearchParamWhere.NAME,
-               sort_by=ParamSort.UPLOAD, sort_order=ParamSeq.DECREASING, number=TORRENTS_PER_PAGE):
-        page_count = 0
+               sort_by=ParamSort.UPLOAD, sort_order=ParamSeq.DECREASING, number=None):
+        page_count = 1
         torrents = []
-        while page_count * TORRENTS_PER_PAGE < number:
-            url = URLs.DOWNLOAD_PATTERN.value.format(page=page_count + 1,
+        while number is None or len(torrents) < number:
+            url = URLs.DOWNLOAD_PATTERN.value.format(page=page_count,
                                                      t_type=type.value,
                                                      sort=sort_by.value,
                                                      seq=sort_order.value,
@@ -80,7 +79,7 @@ class Client:
             except Exception as e:
                 raise NcoreConnectionError(f"Error while searhing torrents. {e}") from e
             new_torrents = [Torrent(**params) for params in self._page_parser.get_items(request.text)]
-            if len(new_torrents) == 0:
+            if number is None or len(new_torrents) == 0:
                 return torrents
             torrents.extend(new_torrents)
             page_count += 1

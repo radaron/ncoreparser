@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "ncoreparser"
-version = "2.1.0"
+version = "2.1.1"
 description = "Package to download from ncore.pro"
 authors = [
   { name="Aron Radics", email="aron.radics.jozsef@gmail.com" }
