@@ -7,8 +7,8 @@ venv: .venv
 
 lock:
 	$(ACTIVATE) && pip install --upgrade pip pip-tools
-	$(ACTIVATE) && pip-compile --generate-hashes --output-file=requirements.txt --no-emit-index-url pyproject.toml
-	$(ACTIVATE) && pip-compile --generate-hashes --output-file=dev-requirements.txt --no-emit-index-url --extra dev pyproject.toml
+	$(ACTIVATE) && pip-compile --upgrade --generate-hashes --output-file=requirements.txt --no-emit-index-url pyproject.toml
+	$(ACTIVATE) && pip-compile --upgrade --generate-hashes --output-file=dev-requirements.txt --no-emit-index-url --extra dev pyproject.toml
 
 reqs: .venv
 	$(ACTIVATE) && pip install -r requirements.txt
