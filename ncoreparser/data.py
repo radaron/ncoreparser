@@ -112,3 +112,23 @@ class URLs(Enum):
                                        "&miben={where}"
     DETAIL_PATTERN = TORRENTS_BASE + "?action=details&id={id}"
     DOWNLOAD_LINK = "https://ncore.pro/torrents.php?action=download&id={id}&key={key}"
+
+
+class ParamSortV2(Enum):
+    NAME = "title"
+    SIZE = "size"
+    DOWNLOAD = "d"
+    SEEDERS = "s"
+    LEECHERS = "l"
+
+
+class URLsV2(Enum):
+    INDEX = "https://ncore.pro/index.php"
+    LOGIN = "https://ncore.pro/login.php"
+    TORRENTS_BASE = "https://ncore.pro/api/v2/torrents"
+    AUTH = "https://ncore.pro/api/v2/auth"
+    SEARCH_PATTERN = TORRENTS_BASE + "?pi={page}" \
+                                     "&categories={t_type}" \
+                                     "&oby={sort}" \
+                                     "&odir={seq}" \
+                                     "&q={pattern}"

@@ -48,7 +48,6 @@ class AsyncClient:
         self._activity_parser = ActivityParser()
         self._recommended_parser = RecommendedParser()
 
-
     async def login(self, username, password):
         self._client.cookies.clear()
         try:
