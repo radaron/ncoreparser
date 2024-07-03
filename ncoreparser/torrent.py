@@ -3,8 +3,8 @@ from ncoreparser.data import URLs
 
 
 class Torrent:
-    def __init__(self, id, title, key, size,  # pylint: disable=too-many-arguments
-                 type, date, seed, leech, **params):  # pylint: disable=too-many-arguments
+    def __init__(self, id, title, key, size, #pylint: disable=too-many-arguments
+                 type, date, seed, leech, **params): #pylint: disable=too-many-arguments
         self._details = {}
         self._details["id"] = int(id)
         self._details["title"] = title
@@ -34,19 +34,3 @@ class Torrent:
         filepath = os.path.join(path, filename)
         url = self._details['download']
         return filepath, url
-
-class TorrentV2(Torrent):
-
-    def __init__(self, id, title, key, size,  # pylint: disable=too-many-arguments
-                 type, date, seed, leech, **params):  # pylint: disable=too-many-arguments
-        self._details = {}
-        self._details["id"] = int(id)
-        self._details["title"] = title
-        self._details["key"] = key
-        self._details["size"] = size
-        self._details["type"] = type
-        self._details["date"] = date
-        self._details["seed"] = seed
-        self._details["leech"] = leech
-        self._details["download"] = URLs.DOWNLOAD_LINK.value.format(id=id, key=key)
-        self._details.update(params)

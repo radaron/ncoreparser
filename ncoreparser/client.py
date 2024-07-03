@@ -3,7 +3,6 @@ import functools
 import httpx
 from ncoreparser.data import (
     URLs,
-    URLsV2,
     SearchParamType,
     SearchParamWhere,
     ParamSort,
@@ -22,13 +21,13 @@ from ncoreparser.parser import (
     RecommendedParser
 )
 from ncoreparser.util import Size
-from ncoreparser.torrent import Torrent, TorrentV2
+from ncoreparser.torrent import Torrent
 
 
 def _check_login(func):
     @functools.wraps(func)
     def wrapper(self, *args, **kwargs):
-        if not self._logged_in:  # pylint: disable=protected-access
+        if not self._logged_in: # pylint: disable=protected-access
             raise NcoreConnectionError("Cannot login to tracker. "
                                        f"Please use {Client.login.__name__} function first.")
         return func(self, *args, **kwargs)
@@ -46,6 +45,7 @@ class Client:
         self._rss_parser = RssParser()
         self._activity_parser = ActivityParser()
         self._recommended_parser = RecommendedParser()
+
 
     def login(self, username, password):
         self._client.cookies.clear()
@@ -156,45 +156,3 @@ class Client:
         self._client.cookies.clear()
         self._client.close()
         self._logged_in = False
-
-
-class ClientV2(Client):
-
-    def __init__(self, timeout=1):
-        super().__init__(timeout)
-        self._user_info = None
-
-    def login(self, username, password):
-        super().login(username, password)
-        self._user_info = self._get_user_info()
-        self._client.headers['Authorization'] = f'Bearer {self._user_info["token"]}'
-
-    def _get_user_info(self):
-        try:
-            r = self._client.get(URLsV2.AUTH.value)
-        except Exception as e:
-            raise NcoreConnectionError(f"Error while get auth token. {e}") from e
-        data = r.json()
-        return {'token': data['user']['token'], 'key': data['user']['trackerKey']}
-
-    @_check_login
-    def search(self, pattern, type=SearchParamType.ALL_OWN, where=None,
-               sort_by=ParamSort.UPLOAD, sort_order=ParamSeq.DECREASING, number=None):
-        page_count = 1
-        torrents = []
-        while number is None or len(torrents) < number:
-            url = URLsV2.SEARCH_PATTERN.value.format(page=page_count,
-                                                     t_type=type.value,
-                                                     sort=sort_by.value,
-                                                     seq=sort_order.value,
-                                                     pattern=pattern)
-            try:
-                request = self._client.get(url)
-            except Exception as e:
-                raise NcoreConnectionError(f"Error while searhing torrents. {e}") from e
-            new_torrents = [Torrent(**params) for params in request.json().get('torrents', [])]
-            if number is None or len(new_torrents) == 0:
-                return torrents
-            torrents.extend(new_torrents)
-            page_count += 1
-        return torrents[:number]
