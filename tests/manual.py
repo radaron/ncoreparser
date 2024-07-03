@@ -1,6 +1,6 @@
 import time
 import argparse
-from ncoreparser import Client, SearchParamType, ParamSort, ParamSeq
+from ncoreparser import Client, ClientV2, SearchParamType, ParamSort, ParamSortV2, ParamSeq
 
 
 def print_category(msg):
@@ -30,7 +30,7 @@ parser.add_argument('--rss-feed', '-r', required=True, type=str)
 args = parser.parse_args()
 
 
-if __name__ == "__main__":
+def test_client():
     start = time.time()
 
     print("Login")
@@ -70,3 +70,22 @@ if __name__ == "__main__":
 
     diff = end - start
     print("\nElapsed time: {} sec.".format(diff))
+
+
+def test_client_v2():
+    start = time.time()
+
+    print("Login")
+    client = ClientV2(timeout=5)
+    client.login(args.user, args.passw)
+
+    print_category("Most seeded torrents/category")
+    for t_type in SearchParamType:
+        torrent = client.search(pattern="", type=t_type, number=1,
+                                sort_by=ParamSort.SEEDERS, sort_order=ParamSeq.DECREASING)[0]
+        pretty_print(torrent)
+
+    print("")
+
+if __name__ == "__main__":
+    test_client()
