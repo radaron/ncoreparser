@@ -1,6 +1,15 @@
 import time
 import argparse
-from ncoreparser import Client, ClientV2, SearchParamType, ParamSort, ParamSortV2, ParamSeq
+from ncoreparser import (
+    Client,
+    ClientV2,
+    SearchParamType,
+    SearchParamTypeV2,
+    ParamSort,
+    ParamSortV2,
+    ParamSeq,
+    ParamSeqV2
+)
 
 
 def print_category(msg):
@@ -14,7 +23,7 @@ def print_category(msg):
 
 def pretty_print(torrent):
     print("|{:^100}|{:^30}|{:^10}|{:^10}|{:^10}|{:^10}|".format(torrent['title'],
-                                                                torrent['type'],
+                                                                str(torrent['type']),
                                                                 str(torrent['size']),
                                                                 str(torrent['id']),
                                                                 torrent['seed'],
@@ -48,7 +57,8 @@ def test_client():
     torrent = client.search(pattern="Forrest gump", type=SearchParamType.HD_HUN, number=1,
                             sort_by=ParamSort.SEEDERS, sort_order=ParamSeq.DECREASING)[0]
 
-    client.download(torrent, "/tmp", override=True)
+    path = client.download(torrent, "/tmp", override=True)
+    print(f"Donwnloaded to {path}")
 
     print_category("List by rss")
     torrents = client.get_by_rss(args.rss_feed)
@@ -80,12 +90,26 @@ def test_client_v2():
     client.login(args.user, args.passw)
 
     print_category("Most seeded torrents/category")
-    for t_type in SearchParamType:
-        torrent = client.search(pattern="", type=t_type, number=1,
-                                sort_by=ParamSort.SEEDERS, sort_order=ParamSeq.DECREASING)[0]
+    for t_type in SearchParamTypeV2:
+        torrent = client.search(pattern="", types=[t_type], number=1,
+                                sort_by=ParamSortV2.SEEDERS, sort_order=ParamSeqV2.DECREASING)[0]
         pretty_print(torrent)
 
     print("")
+    print("Donwnload torrent")
+    torrent = client.search(pattern="Forrest gump", types=SearchParamTypeV2.MOVIES, number=1,
+                            sort_by=ParamSortV2.SEEDERS, sort_order=ParamSeqV2.DECREASING)[0]
+
+    path = client.download(torrent, "/tmp", override=True)
+    print(f"Donwnloaded to {path}")
+
+    client.logout()
+    end = time.time()
+
+    diff = end - start
+    print("\nElapsed time: {} sec.".format(diff))
+
 
 if __name__ == "__main__":
     test_client()
+    test_client_v2()

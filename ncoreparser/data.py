@@ -114,8 +114,12 @@ class URLs(Enum):
     DOWNLOAD_LINK = "https://ncore.pro/torrents.php?action=download&id={id}&key={key}"
 
 
+class ParamSeqV2(Enum):
+    INCREASING = "asc"
+    DECREASING = "desc"
+
+
 class SearchParamTypeV2(IntEnum):
-    ALL = 0
     MOVIES = 1
     SERIES = 2
     MUSIC = 3
@@ -123,6 +127,10 @@ class SearchParamTypeV2(IntEnum):
     EBOOKS = 5
     APPS = 6
     ADULT = 7
+
+    @property
+    def all(self):
+        return [self.MOVIES, self.SERIES, self.MUSIC, self.GAMES, self.EBOOKS, self.APPS, self.ADULT]
 
 
 class ParamSortV2(Enum):
@@ -139,8 +147,4 @@ class URLsV2(Enum):
     LOGIN = "https://ncore.pro/login.php"
     TORRENTS_BASE = "https://ncore.pro/api/v2/torrents"
     AUTH = "https://ncore.pro/api/v2/auth"
-    SEARCH_PATTERN = TORRENTS_BASE + "?pi={page}" \
-                                     "&categories={t_type}" \
-                                     "&oby={sort}" \
-                                     "&odir={seq}" \
-                                     "&q={pattern}"
+    DOWNLOAD_LINK = "https://ncore.pro/torrents.php?action=download&id={id}&key={key}"

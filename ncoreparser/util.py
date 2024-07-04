@@ -10,13 +10,19 @@ class Size:
         "TiB": 1024**4
     }
 
-    def __init__(self, size, unit=None):
-        self._unit = unit
+    def __init__(self, size):
         self._size = 0  # in bytes
         if isinstance(size, str):
             self._parse_str(size)
         elif isinstance(size, (int, float)):
             self._size = size
+            self._find_best_unit()
+
+    def _find_best_unit(self):
+        for unit, multiplier in self.unit_size.items():
+            if 0 < int(self._size / multiplier) <= 1000:
+                self._unit = unit
+                break
 
     def _parse_str(self, size):
         size, unit = size.split(" ")
@@ -36,20 +42,12 @@ class Size:
     def __add__(self, obj):
         self._check_obj(obj)
         size = self._size + obj._size
-        unit = self._unit
-        for u, multiplier in self.unit_size.items():
-            if 0 < int(self._size / multiplier) <= 1000:
-                unit = u
-                break
-        return Size(size, unit)
+        return Size(size)
 
     def __iadd__(self, obj):
         self._check_obj(obj)
         self._size = self._size + obj._size
-        for unit, multiplier in self.unit_size.items():
-            if 0 < int(self._size / multiplier) <= 1000:
-                self._unit = unit
-                break
+        self._find_best_unit()
         return self
 
     def __eq__(self, obj):
