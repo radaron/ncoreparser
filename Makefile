@@ -1,33 +1,28 @@
 ACTIVATE = . .venv/bin/activate
 
 .venv:
-	python3.9 -m venv .venv
+	rm -rf .venv
+	python3 -m venv .venv
+	$(ACTIVATE) && pip install --upgrade pip
 
 venv: .venv
 
 reqs: .venv
-	$(ACTIVATE) && pip install -r requirements.txt
+	$(ACTIVATE) && pip install .[dev]
 
-reqs-dev: reqs
-	$(ACTIVATE) && pip install -r dev-requirements.txt
-
-lint: reqs-dev
+lint:
 	$(ACTIVATE) && pylint ncoreparser
 
-test: reqs-dev
-	$(ACTIVATE) && python -m pytest tests/
+test:
+	$(ACTIVATE) && tox
+
+module-test:
+	$(ACTIVATE) && cd ./tests/test_module && NCORE_USERNAME="${NCORE_USERNAME}" NCORE_PASSWORD="${NCORE_PASSWORD}" RSS_URL="${RSS_URL}" tox
 
 manual-test:
 	$(ACTIVATE) && python -m tests.manual --user ${NCORE_USERNAME} \
 		--passw "${NCORE_PASSWORD}" --rss-feed "${RSS_URL}"
 
-build:
-	$(ACTIVATE) && pip install --upgrade build
-	$(ACTIVATE) && python -m build
-
 git-tag:
 	git tag v$(shell grep 'version' pyproject.toml | cut -d '"' -f2)
 	git push --tags
-
-clean:
-	rm -rf .venv
