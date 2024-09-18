@@ -2,25 +2,26 @@ name: Module test
 on:
   schedule:
   - cron: '0 7,17 * * *'
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.9', '3.10', '3.11', '3.12']
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-python@v5
       with:
-        python-version: "3.9"
+        python-version: ${{ matrix.python-version }}
     - name: Install dependencies
-      working-directory: ./tests/test_module
       run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
+        make reqs
     - name: Run tests
-      working-directory: ./tests/test_module
       run: |
-        python -m pytest test.py
+        make module-test
       env:
-        NCORE_USER: ${{ secrets.NCORE_USER }}
-        NCORE_PASS: ${{ secrets.NCORE_PASS }}
+        NCORE_USERNAME: ${{ secrets.NCORE_USER }}
+        NCORE_PASSWORD: ${{ secrets.NCORE_PASS }}
         RSS_URL: ${{ secrets.RSS_URL }}

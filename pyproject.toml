@@ -2,9 +2,10 @@
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
+
 [project]
 name = "ncoreparser"
-version = "2.1.1"
+version = "2.1.2"
 description = "Package to download from ncore.pro"
 authors = [
   { name="Aron Radics", email="aron.radics.jozsef@gmail.com" }
@@ -14,22 +15,17 @@ readme = "Readme.md"
 dependencies = [
   "httpx>=0.26.0",
 ]
+requires-python = ">=3.9,<3.13"
+
 
 [project.urls]
 Repository = "https://github.com/radaron/ncoreparser.git"
 
 
 [project.optional-dependencies]
-dev = ["pytest", "pylint"]
-
-[tool.pylint.'MESSAGES CONTROL']
-disable = [
-  "too-few-public-methods",
-  "missing-module-docstring",
-  "missing-class-docstring",
-  "missing-function-docstring",
-  "redefined-builtin",
+dev = [
+  "pytest", 
+  "pylint",
+  "tox",
+  "tox-gh"
 ]
-
-[tool.pylint.format]
-max-line-length = 120
