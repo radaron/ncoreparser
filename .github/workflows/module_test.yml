@@ -20,4 +20,8 @@ jobs:
         make reqs
     - name: Run tests
       run: |
-        make module-test NCORE_USERNAME=${{ secrets.NCORE_USER }} NCORE_PASSWORD=${{ secrets.NCORE_PASS }} RSS_URL=${{ secrets.RSS_URL }}
+        make module-test
+      env:
+        NCORE_USERNAME: ${{ secrets.NCORE_USER }}
+        NCORE_PASSWORD: ${{ secrets.NCORE_PASS }}
+        RSS_URL: ${{ secrets.RSS_URL }}
