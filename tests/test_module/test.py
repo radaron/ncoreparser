@@ -10,7 +10,7 @@ class TestNcoreParser:
     def client(self):
         username = os.environ["NCORE_USERNAME"]
         password = os.environ["NCORE_PASSWORD"]
-        c = Client(timeout=5) # sometimes got read timeout error.
+        c = Client(timeout=5)  # sometimes got read timeout error.
         c.login(username, password)
         return c
 
