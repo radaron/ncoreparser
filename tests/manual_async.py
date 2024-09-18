@@ -7,7 +7,7 @@ from ncoreparser import AsyncClient, SearchParamType, ParamSort, ParamSeq
 def print_category(msg):
     print("")
     print("*{:175}*".format("-" * 175))
-    print("|{:^175}|".format(msg))
+    print(f"|{msg:^175}|")
     print("*{:^100}*{:^30}*{:^10}*{:^10}*{:^10}*{:^10}*".format("-" * 100, "-" * 30, "-" * 10, "-" * 10, "-" * 10, "-" * 10))
     print("|{:^100}|{:^30}|{:^10}|{:^10}|{:^10}|{:^10}|".format("Title", "Type", "Size", "ID", "Seed", "Leech"))
     print("*{:^100}*{:^30}*{:^10}*{:^10}*{:^10}*{:^10}*".format("-" * 100, "-" * 30, "-" * 10, "-" * 10, "-" * 10, "-" * 10))
@@ -69,7 +69,7 @@ async def main():
     end = time.time()
 
     diff = end - start
-    print("\nElapsed time: {} sec.".format(diff))
+    print(f"\nElapsed time: {diff} sec.")
 
 if __name__ == "__main__":
     asyncio.run(main())

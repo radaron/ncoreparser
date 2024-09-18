@@ -3,12 +3,13 @@ import os
 from ncoreparser import Client, SearchParamType
 from ncoreparser.torrent import Torrent
 
+
 class TestNcoreParser:
 
     @pytest.fixture(scope="class")
     def client(self):
-        username = os.environ["NCORE_USER"]
-        password = os.environ["NCORE_PASS"]
+        username = os.environ["NCORE_USERNAME"]
+        password = os.environ["NCORE_PASSWORD"]
         c = Client(timeout=5) # sometimes got read timeout error.
         c.login(username, password)
         return c
@@ -50,5 +51,3 @@ class TestNcoreParser:
                     path = os.path.join(root, file)
                     file_content = open(path, 'rb').read()
                     assert len(file_content) > 0
-
-
