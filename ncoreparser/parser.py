@@ -15,6 +15,7 @@ class TorrentsPageParser:
         self.not_found_pattern = re.compile(r'<div class="lista_mini_error">Nincs találat!</div>')
         self.seeders_pattern = re.compile(r'<div class="box_s2"><a class="torrent" href=".*">([0-9]+)</a></div>')
         self.leechers_pattern = re.compile(r'<div class="box_l2"><a class="torrent" href=".*">([0-9]+)</a></div>')
+        self.poster_image_pattern = re.compile(r'onmouseover="mutat\(\'(?P<image_url>https://.*?\')')
 
     @staticmethod
     def get_key(data):
@@ -32,17 +33,25 @@ class TorrentsPageParser:
         sizes = self.size_pattern.findall(data)
         seed = self.seeders_pattern.findall(data)
         leech = self.leechers_pattern.findall(data)
+        poster_image = self.poster_image_pattern.findall(data)
+
+        # There can be torrents without poster_image
+        if (len(poster_image) < len(leech)):
+            for i in range(len(poster_image), len(leech)):
+                poster_image.append('no cover')
+
         if len(types) != 0 and len(types) == len(ids_names) == \
-            len(dates_times) == len(sizes) == len(seed) == len(leech):
+            len(dates_times) == len(sizes) == len(seed) == len(leech) == len(poster_image):
             ids, names = zip(*ids_names)
             dates, times = zip(*dates_times)
             key = self.get_key(data)
         else:
             if not self.not_found_pattern.search(data):
                 raise NcoreParserError(f"Error while parse download items in {self.__class__.__name__}.")
+            return
         for i, id in enumerate(ids):
             yield {"id": id, "title": names[i], "key": key, "date": parse_datetime(dates[i], times[i]),
-                   "size": Size(sizes[i]), "type": SearchParamType(types[i]), "seed": seed[i], "leech": leech[i]}
+                   "size": Size(sizes[i]), "type": SearchParamType(types[i]), "seed": seed[i], "leech": leech[i], "poster_image": poster_image[i]}
 
 
 class TorrenDetailParser:
@@ -57,6 +66,7 @@ class TorrenDetailParser:
         self.peers_pattern = re.compile(r'div class="dt">Seederek:</div>.*?<div class="dd"><a onclick=".*?">'
                                         r'(?P<seed>[0-9]+)</a></div>.*?<div class="dt">Leecherek:</div>.*?<div '
                                         r'class="dd"><a onclick=".*?">(?P<leech>[0-9]+)</a></div>', re.DOTALL)
+        self.poster_image_pattern = re.compile(r'onmouseover="mutat\(\'(?P<image_url>https://.*?)\'')
 
     def get_item(self, data):
         try:
@@ -69,9 +79,10 @@ class TorrenDetailParser:
             peers = self.peers_pattern.search(data)
             seed = peers.group('seed')
             leech = peers.group('leech')
+            poster_image = self.poster_image_pattern
         except AttributeError as e:
             raise NcoreParserError(f"Error while parsing by detailed page. {e}") from e
-        return {"title": title, "key": key, "date": date, "size": size, "type": t_type, 'seed': seed, 'leech': leech}
+        return {"title": title, "key": key, "date": date, "size": size, "type": t_type, 'seed': seed, 'leech': leech, 'poster_image': poster_image}
 
 
 class RssParser:

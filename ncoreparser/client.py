@@ -79,7 +79,7 @@ class Client:
             except Exception as e:
                 raise NcoreConnectionError(f"Error while searhing torrents. {e}") from e
             new_torrents = [Torrent(**params) for params in self._page_parser.get_items(request.text)]
-            if number is None or len(new_torrents) == 0:
+            if len(new_torrents) == 0:
                 return torrents
             torrents.extend(new_torrents)
             page_count += 1

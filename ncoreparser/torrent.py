@@ -4,7 +4,7 @@ from ncoreparser.data import URLs
 
 class Torrent:
     def __init__(self, id, title, key, size, #pylint: disable=too-many-arguments
-                 type, date, seed, leech, **params): #pylint: disable=too-many-arguments
+                 type, date, seed, leech, poster_image, **params): #pylint: disable=too-many-arguments
         self._details = {}
         self._details["id"] = int(id)
         self._details["title"] = title
@@ -14,6 +14,7 @@ class Torrent:
         self._details["date"] = date
         self._details["seed"] = seed
         self._details["leech"] = leech
+        self._details["poster_image"] = poster_image
         self._details["download"] = URLs.DOWNLOAD_LINK.value.format(id=id, key=key)
         self._details.update(params)
 

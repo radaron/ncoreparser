@@ -2,14 +2,13 @@ import time
 import argparse
 from ncoreparser import Client, SearchParamType, ParamSort, ParamSeq
 
-
 def print_category(msg):
     print("")
     print("*{:175}*".format("-" * 175))
     print(f"|{msg:^175}|")
-    print("*{:^100}*{:^30}*{:^10}*{:^10}*{:^10}*{:^10}*".format("-" * 100, "-" * 30, "-" * 10, "-" * 10, "-" * 10, "-" * 10))
-    print("|{:^100}|{:^30}|{:^10}|{:^10}|{:^10}|{:^10}|".format("Title", "Type", "Size", "ID", "Seed", "Leech"))
-    print("*{:^100}*{:^30}*{:^10}*{:^10}*{:^10}*{:^10}*".format("-" * 100, "-" * 30, "-" * 10, "-" * 10, "-" * 10, "-" * 10))
+    print("*{:^100}*{:^30}*{:^10}*{:^10}*{:^10}*{:^10}*".format("-" * 100, "-" * 30, "-" * 10, "-" * 10, "-" * 10, "-" * 10, "-" * 10))
+    print("|{:^100}|{:^30}|{:^10}|{:^10}|{:^10}|{:^10}|".format("Title", "Type", "Size", "ID", "Seed", "Leech", "Poster"))
+    print("*{:^100}*{:^30}*{:^10}*{:^10}*{:^10}*{:^10}*".format("-" * 100, "-" * 30, "-" * 10, "-" * 10, "-" * 10, "-" * 10, "-" * 10))
 
 
 def pretty_print(torrent):
@@ -18,8 +17,9 @@ def pretty_print(torrent):
                                                                 str(torrent['size']),
                                                                 str(torrent['id']),
                                                                 torrent['seed'],
-                                                                torrent['leech']))
-    print("*{:^100}*{:^30}*{:^10}*{:^10}*{:^10}*{:^10}*".format("-" * 100, "-" * 30, "-" * 10, "-" * 10, "-" * 10, "-" * 10))
+                                                                torrent['leech'],
+                                                                torrent['poster_image']))
+    print("*{:^100}*{:^30}*{:^10}*{:^10}*{:^10}*{:^10}*".format("-" * 100, "-" * 30, "-" * 10, "-" * 10, "-" * 10, "-" * 10, "-" * 10))
 
 
 parser = argparse.ArgumentParser()
