@@ -15,7 +15,7 @@ class TorrentsPageParser:
         self.not_found_pattern = re.compile(r'<div class="lista_mini_error">Nincs találat!</div>')
         self.seeders_pattern = re.compile(r'<div class="box_s2"><a class="torrent" href=".*">([0-9]+)</a></div>')
         self.leechers_pattern = re.compile(r'<div class="box_l2"><a class="torrent" href=".*">([0-9]+)</a></div>')
-        self.poster_image_pattern = re.compile(r'onmouseover="mutat\(\'(?P<image_url>https://.*?\')')
+        self.poster_image_pattern = re.compile(r'onmouseover="mutat\(\'(?P<image_url>https://.*?)(?=\')')
 
     @staticmethod
     def get_key(data):
