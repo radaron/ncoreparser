@@ -65,6 +65,11 @@ if __name__ == "__main__":
     for torrent in torrents:
         pretty_print(torrent)
 
+    print_category("Test number=None && pattern=''")
+    torrents = client.search(pattern="")
+    for torrent in torrents:
+        pretty_print(torrent)
+
     client.logout()
     end = time.time()
 

@@ -66,6 +66,11 @@ async def main():
     for torrent in torrents:
         pretty_print(torrent)
 
+    print_category("Test number=None && pattern=''")
+    torrents = await client.search(pattern="")
+    for torrent in torrents:
+        pretty_print(torrent)
+
     await client.logout()
     end = time.time()
 

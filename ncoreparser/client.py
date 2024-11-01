@@ -67,6 +67,9 @@ class Client:
                sort_by=ParamSort.UPLOAD, sort_order=ParamSeq.DECREASING, number=None):
         page_count = 1
         torrents = []
+        if (pattern == ""):
+            return torrents
+
         while number is None or len(torrents) < number:
             url = URLs.DOWNLOAD_PATTERN.value.format(page=page_count,
                                                      t_type=type.value,
