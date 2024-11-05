@@ -9,13 +9,16 @@ class TorrentsPageParser:
     def __init__(self):
         self.type_pattern = re.compile(r'<a href=".*\/torrents\.php\?tipus=(.*?)">'
                                        r'<img src=".*" class="categ_link" alt=".*" title=".*">')
-        self.id_name_pattern = re.compile(r'<a href=".*?" onclick="torrent\(([0-9]+)\); return false;" title="(.*?)">')
+        self.id_name_poster_pattern = re.compile(
+             r'<a href=".*?" onclick="torrent\((\d+)\);.*?" title="(.*?)">.*?(?:onmouseover="mutat\(\'(https:\/\/.*?)\',.*?)',
+             re.DOTALL)
+        self.id_name_patter = re.compile(r'<a href=".*?" onclick="torrent\(([0-9]+)\); return false;" title="(.*?)">')
         self.date_pattern = re.compile(r'<div class="box_feltoltve2">(.*?)<br>(.*?)</div>')
         self.size_pattern = re.compile(r'<div class="box_meret2">(.*?)</div>')
         self.not_found_pattern = re.compile(r'<div class="lista_mini_error">Nincs találat!</div>')
         self.seeders_pattern = re.compile(r'<div class="box_s2"><a class="torrent" href=".*">([0-9]+)</a></div>')
         self.leechers_pattern = re.compile(r'<div class="box_l2"><a class="torrent" href=".*">([0-9]+)</a></div>')
-        self.poster_image_pattern = re.compile(r'onmouseover="mutat\(\'(?P<image_url>https://.*?)(?=\')')
+
 
     @staticmethod
     def get_key(data):
@@ -26,23 +29,34 @@ class TorrentsPageParser:
         raise NcoreParserError(f"Error while read user "
                                f"key with pattern: {key_pattern}")
 
+
+    def id_exists(self, data, search_id):
+        for i, id in enumerate(data):
+            if search_id in data[i]:
+                return True
+
+        return False
+
+
     def get_items(self, data):
         types = self.type_pattern.findall(data)
-        ids_names = self.id_name_pattern.findall(data)
+        ids_names_posters = self.id_name_poster_pattern.findall(data)
+        ids_names = self.id_name_patter.findall(data)
         dates_times = self.date_pattern.findall(data)
         sizes = self.size_pattern.findall(data)
         seed = self.seeders_pattern.findall(data)
         leech = self.leechers_pattern.findall(data)
-        poster_image = self.poster_image_pattern.findall(data)
 
-        # There can be torrents without poster_image
-        if (len(poster_image) < len(leech)):
-            for i in range(len(poster_image), len(leech)):
-                poster_image.append('no cover')
+        # Not all torrents has poster img
+        if (len(ids_names) != len(ids_names_posters)):
+            for i, id in enumerate(ids_names):
+                if not self.id_exists(ids_names_posters, ids_names[i][0]):
+                    missing_torrent_data = (ids_names[i][0], ids_names[i][1], 'no cover')
+                    ids_names_posters.append(missing_torrent_data)
 
-        if len(types) != 0 and len(types) == len(ids_names) == \
-            len(dates_times) == len(sizes) == len(seed) == len(leech) == len(poster_image):
-            ids, names = zip(*ids_names)
+        if len(types) != 0 and len(types) == len(ids_names_posters) == \
+            len(dates_times) == len(sizes) == len(seed) == len(leech):
+            ids, names, poster_image = zip(*ids_names_posters)
             dates, times = zip(*dates_times)
             key = self.get_key(data)
         else:
@@ -79,7 +93,11 @@ class TorrenDetailParser:
             peers = self.peers_pattern.search(data)
             seed = peers.group('seed')
             leech = peers.group('leech')
-            poster_image = self.poster_image_pattern
+            poster_image = self.poster_image_pattern.search(data)
+
+            # There can be torrents without poster image
+            if not poster_image:
+                poster_image = 'No cover'
         except AttributeError as e:
             raise NcoreParserError(f"Error while parsing by detailed page. {e}") from e
         return {"title": title, "key": key, "date": date, "size": size, "type": t_type, 'seed': seed, 'leech': leech, 'poster_image': poster_image}
