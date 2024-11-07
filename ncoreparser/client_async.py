@@ -69,7 +69,7 @@ class AsyncClient:
                sort_by=ParamSort.UPLOAD, sort_order=ParamSeq.DECREASING, number=None):
         page_count = 1
         torrents = []
-        while number is None or len(torrents) < number:
+        while number is None or number == -1 or len(torrents) < number:
             url = URLs.DOWNLOAD_PATTERN.value.format(page=page_count,
                                                      t_type=type.value,
                                                      sort=sort_by.value,
@@ -81,9 +81,9 @@ class AsyncClient:
             except Exception as e:
                 raise NcoreConnectionError(f"Error while searhing torrents. {e}") from e
             new_torrents = [Torrent(**params) for params in self._page_parser.get_items(request.text)]
+            torrents.extend(new_torrents)
             if number is None or len(new_torrents) == 0:
                 return torrents
-            torrents.extend(new_torrents)
             page_count += 1
         return torrents[:number]
 

@@ -6,21 +6,22 @@ from ncoreparser import AsyncClient, SearchParamType, ParamSort, ParamSeq
 
 def print_category(msg):
     print("")
-    print("*{:175}*".format("-" * 175))
-    print(f"|{msg:^175}|")
-    print("*{:^100}*{:^30}*{:^10}*{:^10}*{:^10}*{:^10}*".format("-" * 100, "-" * 30, "-" * 10, "-" * 10, "-" * 10, "-" * 10))
-    print("|{:^100}|{:^30}|{:^10}|{:^10}|{:^10}|{:^10}|".format("Title", "Type", "Size", "ID", "Seed", "Leech"))
-    print("*{:^100}*{:^30}*{:^10}*{:^10}*{:^10}*{:^10}*".format("-" * 100, "-" * 30, "-" * 10, "-" * 10, "-" * 10, "-" * 10))
+    print("*{:276}*".format("-" * 276))
+    print(f"|{msg:^276}|")
+    print("*{:^100}*{:^30}*{:^10}*{:^10}*{:^10}*{:^10}*{:^100}*".format("-" * 100, "-" * 30, "-" * 10, "-" * 10, "-" * 10, "-" * 10, "-" * 100))
+    print("|{:^100}|{:^30}|{:^10}|{:^10}|{:^10}|{:^10}|{:^100}|".format("Title", "Type", "Size", "ID", "Seed", "Leech", "Poster"))
+    print("*{:^100}*{:^30}*{:^10}*{:^10}*{:^10}*{:^10}*{:^100}*".format("-" * 100, "-" * 30, "-" * 10, "-" * 10, "-" * 10, "-" * 10, "-" * 100))
 
 
 def pretty_print(torrent):
-    print("|{:^100}|{:^30}|{:^10}|{:^10}|{:^10}|{:^10}|".format(torrent['title'],
+    print("|{:^100}|{:^30}|{:^10}|{:^10}|{:^10}|{:^10}|{:^100}|".format(torrent['title'],
                                                                 torrent['type'],
                                                                 str(torrent['size']),
                                                                 str(torrent['id']),
                                                                 torrent['seed'],
-                                                                torrent['leech']))
-    print("*{:^100}*{:^30}*{:^10}*{:^10}*{:^10}*{:^10}*".format("-" * 100, "-" * 30, "-" * 10, "-" * 10, "-" * 10, "-" * 10))
+                                                                torrent['leech'],
+                                                                torrent['poster_image']))
+    print("*{:^100}*{:^30}*{:^10}*{:^10}*{:^10}*{:^10}*{:^100}*".format("-" * 100, "-" * 30, "-" * 10, "-" * 10, "-" * 10, "-" * 10, "-" * 100))
 
 
 parser = argparse.ArgumentParser()
@@ -62,6 +63,16 @@ async def main():
 
     print_category("List by recommended")
     torrents = await client.get_recommended(type=SearchParamType.HDSER_HUN)
+    for torrent in torrents:
+        pretty_print(torrent)
+
+    print_category("Test number=None")
+    torrents = await client.search(pattern="")
+    for torrent in torrents:
+        pretty_print(torrent)
+
+    print_category("Test number=-1")
+    torrents = await client.search(pattern="creed", number=-1)
     for torrent in torrents:
         pretty_print(torrent)
 
