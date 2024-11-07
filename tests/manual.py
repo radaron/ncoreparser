@@ -2,24 +2,25 @@ import time
 import argparse
 from ncoreparser import Client, SearchParamType, ParamSort, ParamSeq
 
+
 def print_category(msg):
     print("")
-    print("*{:175}*".format("-" * 175))
-    print(f"|{msg:^175}|")
-    print("*{:^100}*{:^30}*{:^10}*{:^10}*{:^10}*{:^10}*".format("-" * 100, "-" * 30, "-" * 10, "-" * 10, "-" * 10, "-" * 10, "-" * 10))
-    print("|{:^100}|{:^30}|{:^10}|{:^10}|{:^10}|{:^10}|".format("Title", "Type", "Size", "ID", "Seed", "Leech", "Poster"))
-    print("*{:^100}*{:^30}*{:^10}*{:^10}*{:^10}*{:^10}*".format("-" * 100, "-" * 30, "-" * 10, "-" * 10, "-" * 10, "-" * 10, "-" * 10))
+    print("*{:276}*".format("-" * 276))
+    print(f"|{msg:^276}|")
+    print("*{:^100}*{:^30}*{:^10}*{:^10}*{:^10}*{:^10}*{:^100}*".format("-" * 100, "-" * 30, "-" * 10, "-" * 10, "-" * 10, "-" * 10, "-" * 100))
+    print("|{:^100}|{:^30}|{:^10}|{:^10}|{:^10}|{:^10}|{:^100}|".format("Title", "Type", "Size", "ID", "Seed", "Leech", "Poster"))
+    print("*{:^100}*{:^30}*{:^10}*{:^10}*{:^10}*{:^10}*{:^100}*".format("-" * 100, "-" * 30, "-" * 10, "-" * 10, "-" * 10, "-" * 10, "-" * 100))
 
 
 def pretty_print(torrent):
-    print("|{:^100}|{:^30}|{:^10}|{:^10}|{:^10}|{:^10}|".format(torrent['title'],
+    print("|{:^100}|{:^30}|{:^10}|{:^10}|{:^10}|{:^10}|{:^100}|".format(torrent['title'],
                                                                 torrent['type'],
                                                                 str(torrent['size']),
                                                                 str(torrent['id']),
                                                                 torrent['seed'],
                                                                 torrent['leech'],
                                                                 torrent['poster_image']))
-    print("*{:^100}*{:^30}*{:^10}*{:^10}*{:^10}*{:^10}*".format("-" * 100, "-" * 30, "-" * 10, "-" * 10, "-" * 10, "-" * 10, "-" * 10))
+    print("*{:^100}*{:^30}*{:^10}*{:^10}*{:^10}*{:^10}*{:^100}*".format("-" * 100, "-" * 30, "-" * 10, "-" * 10, "-" * 10, "-" * 10, "-" * 100))
 
 
 parser = argparse.ArgumentParser()
