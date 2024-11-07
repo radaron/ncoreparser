@@ -11,7 +11,8 @@ class TorrentsPageParser:
                                        r'<img src=".*" class="categ_link" alt=".*" title=".*">')
         self.id_name_poster_pattern = re.compile(
              r'<a href=".*?" onclick="torrent\((\d+)\);.*?" title="(.*?)">.*?(?:onmouseover="mutat\(\'(https:\/\/.*?)\',.*?)',
-             re.DOTALL)
+             re.DOTALL
+        )
         self.id_name_patter = re.compile(r'<a href=".*?" onclick="torrent\(([0-9]+)\); return false;" title="(.*?)">')
         self.date_pattern = re.compile(r'<div class="box_feltoltve2">(.*?)<br>(.*?)</div>')
         self.size_pattern = re.compile(r'<div class="box_meret2">(.*?)</div>')
