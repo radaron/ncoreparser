@@ -81,7 +81,7 @@ class TorrenDetailParser:
         self.peers_pattern = re.compile(r'div class="dt">Seederek:</div>.*?<div class="dd"><a onclick=".*?">'
                                         r'(?P<seed>[0-9]+)</a></div>.*?<div class="dt">Leecherek:</div>.*?<div '
                                         r'class="dd"><a onclick=".*?">(?P<leech>[0-9]+)</a></div>', re.DOTALL)
-        self.poster_image_pattern = re.compile(r'onmouseover="mutat\(\'(?P<image_url>https://.*?)\'')
+        self.poster_image_pattern = re.compile(r'<td class="inforbar_img" align="center"><img\s+[^>]*src="(https://[^\"]+)', re.DOTALL)
 
     def get_item(self, data):
         try:
@@ -94,11 +94,9 @@ class TorrenDetailParser:
             peers = self.peers_pattern.search(data)
             seed = peers.group('seed')
             leech = peers.group('leech')
-            poster_image = self.poster_image_pattern.search(data)
+            poster_image_match = self.poster_image_pattern.search(data)
+            poster_image = poster_image_match.group(1) if poster_image_match else "No cover"
 
-            # There can be torrents without poster image
-            if not poster_image:
-                poster_image = 'No cover'
         except AttributeError as e:
             raise NcoreParserError(f"Error while parsing by detailed page. {e}") from e
         return {"title": title, "key": key, "date": date, "size": size, "type": t_type, 'seed': seed, 'leech': leech, 'poster_image': poster_image}
