@@ -64,9 +64,16 @@ class AsyncClient:
         self._logged_in = True
 
     @_check_login
-    # pylint: disable=too-many-arguments
-    async def search(self, pattern, type=SearchParamType.ALL_OWN, where=SearchParamWhere.NAME,
-               sort_by=ParamSort.UPLOAD, sort_order=ParamSeq.DECREASING, number=None):
+    # pylint: disable=too-many-arguments, too-many-positional-arguments
+    async def search(
+        self,
+        pattern,
+        type=SearchParamType.ALL_OWN,
+        where=SearchParamWhere.NAME,
+        sort_by=ParamSort.UPLOAD,
+        sort_order=ParamSeq.DECREASING,
+        number=None
+    ):
         page_count = 1
         torrents = []
         while number is None or len(torrents) < number:

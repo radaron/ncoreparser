@@ -27,7 +27,7 @@ from ncoreparser.torrent import Torrent
 def _check_login(func):
     @functools.wraps(func)
     def wrapper(self, *args, **kwargs):
-        if not self._logged_in: # pylint: disable=protected-access
+        if not self._logged_in:  # pylint: disable=protected-access
             raise NcoreConnectionError("Cannot login to tracker. "
                                        f"Please use {Client.login.__name__} function first.")
         return func(self, *args, **kwargs)
@@ -46,7 +46,6 @@ class Client:
         self._activity_parser = ActivityParser()
         self._recommended_parser = RecommendedParser()
 
-
     def login(self, username, password):
         self._client.cookies.clear()
         try:
@@ -62,9 +61,16 @@ class Client:
         self._logged_in = True
 
     @_check_login
-    # pylint: disable=too-many-arguments
-    def search(self, pattern, type=SearchParamType.ALL_OWN, where=SearchParamWhere.NAME,
-               sort_by=ParamSort.UPLOAD, sort_order=ParamSeq.DECREASING, number=None):
+    # pylint: disable=too-many-arguments, too-many-positional-arguments
+    def search(
+        self,
+        pattern,
+        type=SearchParamType.ALL_OWN,
+        where=SearchParamWhere.NAME,
+        sort_by=ParamSort.UPLOAD,
+        sort_order=ParamSeq.DECREASING,
+        number=None
+    ):
         page_count = 1
         torrents = []
         while number is None or len(torrents) < number:

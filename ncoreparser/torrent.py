@@ -3,8 +3,19 @@ from ncoreparser.data import URLs
 
 
 class Torrent:
-    def __init__(self, id, title, key, size, #pylint: disable=too-many-arguments
-                 type, date, seed, leech, **params): #pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments, too-many-positional-arguments
+    def __init__(
+        self,
+        id,
+        title,
+        key,
+        size,
+        type,
+        date,
+        seed,
+        leech,
+        **params
+    ):
         self._details = {}
         self._details["id"] = int(id)
         self._details["title"] = title
