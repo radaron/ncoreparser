@@ -26,7 +26,7 @@ class TestNcoreParser:
         rss_url = os.environ["RSS_URL"]
         torrents = client.get_by_rss(rss_url)
 
-        assert len(torrents) == 1
+        assert len(list(torrents)) == 1
         torrent = torrents[0]
 
         assert isinstance(torrent, Torrent)
@@ -35,7 +35,7 @@ class TestNcoreParser:
     def test_recommended(self, client):
         torrents = client.get_recommended(SearchParamType.HDSER_HUN)
 
-        assert len(torrents) > 0
+        assert len(list(torrents)) > 0
         for torrent in torrents:
             assert isinstance(torrent, Torrent)
             assert torrent["type"] == SearchParamType.HDSER_HUN
