@@ -26,8 +26,9 @@ class TestNcoreParser:
         rss_url = os.environ["RSS_URL"]
         torrents = client.get_by_rss(rss_url)
 
-        assert len(list(torrents)) == 1
-        torrent = torrents[0]
+        torrents_list = list(torrents)
+        assert len(torrents_list) == 1
+        torrent = torrents_list[0]
 
         assert isinstance(torrent, Torrent)
         assert "FORREST" in torrent["title"].upper()
