@@ -101,10 +101,8 @@ class AsyncClient:
         except Exception as e:
             raise NcoreConnectionError(f"Error while get rss. Url: '{url}'. {e}") from e
 
-        torrents = []
         for id in self._rss_parser.get_ids(content.text):
-            torrents.append(await self.get_torrent(id))
-        return torrents
+            yield await self.get_torrent(id)
 
     @check_login
     async def get_by_activity(self):
@@ -133,8 +131,10 @@ class AsyncClient:
         except Exception as e:
             raise NcoreConnectionError(f"Error while get recommended. Url: '{URLs.RECOMMENDED.value}'. {e}") from e
 
-        all_recommended = [await self.get_torrent(id) for id in self._recommended_parser.get_ids(content.text)]
-        return [torrent for torrent in all_recommended if not type or torrent['type'] == type]
+        for id in self._recommended_parser.get_ids(content.text):
+            torrent = await self.get_torrent(id)
+            if not type or torrent['type'] == type:
+                yield torrent
 
     @check_login
     async def download(self, torrent, path, override=False):
