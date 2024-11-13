@@ -1,7 +1,6 @@
 # pylint: disable=duplicate-code
 
 import os
-import functools
 import httpx
 from ncoreparser.data import (
     URLs,
@@ -22,18 +21,8 @@ from ncoreparser.parser import (
     ActivityParser,
     RecommendedParser
 )
-from ncoreparser.util import Size
+from ncoreparser.util import Size, check_login
 from ncoreparser.torrent import Torrent
-
-
-def _check_login(func):
-    @functools.wraps(func)
-    def wrapper(self, *args, **kwargs):
-        if not self._logged_in: # pylint: disable=protected-access
-            raise NcoreConnectionError("Cannot login to tracker. "
-                                       f"Please use {AsyncClient.login.__name__} function first.")
-        return func(self, *args, **kwargs)
-    return wrapper
 
 
 class AsyncClient:
@@ -47,7 +36,6 @@ class AsyncClient:
         self._rss_parser = RssParser()
         self._activity_parser = ActivityParser()
         self._recommended_parser = RecommendedParser()
-
 
     async def login(self, username, password):
         self._client.cookies.clear()
@@ -63,7 +51,7 @@ class AsyncClient:
                                        f"credentials for user: '{username}'")
         self._logged_in = True
 
-    @_check_login
+    @check_login
     # pylint: disable=too-many-arguments, too-many-positional-arguments
     async def search(
         self,
@@ -94,7 +82,7 @@ class AsyncClient:
             page_count += 1
         return torrents[:number]
 
-    @_check_login
+    @check_login
     async def get_torrent(self, id, **ext_params):
         url = URLs.DETAIL_PATTERN.value.format(id=id)
         try:
@@ -106,7 +94,7 @@ class AsyncClient:
         params.update(ext_params)
         return Torrent(**params)
 
-    @_check_login
+    @check_login
     async def get_by_rss(self, url):
         try:
             content = await self._client.get(url)
@@ -118,7 +106,7 @@ class AsyncClient:
             torrents.append(await self.get_torrent(id))
         return torrents
 
-    @_check_login
+    @check_login
     async def get_by_activity(self):
         try:
             content = await self._client.get(URLs.ACTIVITY.value)
@@ -138,7 +126,7 @@ class AsyncClient:
                                                    rate=float(rate)))
         return torrents
 
-    @_check_login
+    @check_login
     async def get_recommended(self, type=None):
         try:
             content = await self._client.get(URLs.RECOMMENDED.value)
@@ -148,7 +136,7 @@ class AsyncClient:
         all_recommended = [await self.get_torrent(id) for id in self._recommended_parser.get_ids(content.text)]
         return [torrent for torrent in all_recommended if not type or torrent['type'] == type]
 
-    @_check_login
+    @check_login
     async def download(self, torrent, path, override=False):
         file_path, url = torrent.prepare_download(path)
         try:
