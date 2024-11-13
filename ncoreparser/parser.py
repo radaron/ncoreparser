@@ -7,10 +7,12 @@ from ncoreparser.data import SearchParamType, get_detailed_param
 
 class TorrentsPageParser:
     def __init__(self):
-        self.type_pattern = re.compile(r'<a href=".*\/torrents\.php\?tipus=(.*?)">'
-                                       r'<img src=".*" class="categ_link" alt=".*" title=".*">')
-        self.id_name_pattern = re.compile(r'<a href=".*?" onclick="torrent\(([0-9]+)\); return false;" title="(.*?)">')
-        self.date_pattern = re.compile(r'<div class="box_feltoltve2">(.*?)<br>(.*?)</div>')
+        self.type_pattern = re.compile(
+            r'<a href=".*\/torrents\.php\?tipus=(.*?)"><img src=".*" class="categ_link" alt=".*" title=".*">')
+        self.id_and_name_pattern = re.compile(
+            r'<a href=".*?" onclick="torrent\(([0-9]+)\); return false;" title="(.*?)">'
+        )
+        self.date_and_time_pattern = re.compile(r'<div class="box_feltoltve2">(.*?)<br>(.*?)</div>')
         self.size_pattern = re.compile(r'<div class="box_meret2">(.*?)</div>')
         self.not_found_pattern = re.compile(r'<div class="lista_mini_error">Nincs találat!</div>')
         self.seeders_pattern = re.compile(r'<div class="box_s2"><a class="torrent" href=".*">([0-9]+)</a></div>')
@@ -27,15 +29,18 @@ class TorrentsPageParser:
 
     def get_items(self, data):
         types = self.type_pattern.findall(data)
-        ids_names = self.id_name_pattern.findall(data)
-        dates_times = self.date_pattern.findall(data)
+        ids_and_names = self.id_and_name_pattern.findall(data)
+        dates_and_times = self.date_and_time_pattern.findall(data)
         sizes = self.size_pattern.findall(data)
         seed = self.seeders_pattern.findall(data)
         leech = self.leechers_pattern.findall(data)
-        if len(types) != 0 and len(types) == len(ids_names) == \
-            len(dates_times) == len(sizes) == len(seed) == len(leech):
-            ids, names = zip(*ids_names)
-            dates, times = zip(*dates_times)
+        ids = []
+        if (
+            len(types) != 0
+            and len(types) == len(ids_and_names) == len(dates_and_times) == len(sizes) == len(seed) == len(leech)
+        ):
+            ids, names = zip(*ids_and_names)
+            dates, times = zip(*dates_and_times)
             key = self.get_key(data)
         else:
             if not self.not_found_pattern.search(data):
