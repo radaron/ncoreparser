@@ -34,6 +34,7 @@ class TorrentsPageParser:
         sizes = self.size_pattern.findall(data)
         seed = self.seeders_pattern.findall(data)
         leech = self.leechers_pattern.findall(data)
+        ids = []
         if (
             len(types) != 0
             and len(types) == len(ids_and_names) == len(dates_and_times) == len(sizes) == len(seed) == len(leech)
