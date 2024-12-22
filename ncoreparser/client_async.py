@@ -76,9 +76,9 @@ class AsyncClient:
             except Exception as e:
                 raise NcoreConnectionError(f"Error while searhing torrents. {e}") from e
             new_torrents = [Torrent(**params) for params in self._page_parser.get_items(request.text)]
+            torrents.extend(new_torrents)
             if number is None or len(new_torrents) == 0:
                 return torrents
-            torrents.extend(new_torrents)
             page_count += 1
         return torrents[:number]
 
