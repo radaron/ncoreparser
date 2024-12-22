@@ -2,34 +2,18 @@
 
 import os
 import httpx
-from ncoreparser.data import (
-    URLs,
-    SearchParamType,
-    SearchParamWhere,
-    ParamSort,
-    ParamSeq
-)
-from ncoreparser.error import (
-    NcoreConnectionError,
-    NcoreCredentialError,
-    NcoreDownloadError
-)
-from ncoreparser.parser import (
-    TorrentsPageParser,
-    TorrenDetailParser,
-    RssParser,
-    ActivityParser,
-    RecommendedParser
-)
+from ncoreparser.data import URLs, SearchParamType, SearchParamWhere, ParamSort, ParamSeq
+from ncoreparser.error import NcoreConnectionError, NcoreCredentialError, NcoreDownloadError
+from ncoreparser.parser import TorrentsPageParser, TorrenDetailParser, RssParser, ActivityParser, RecommendedParser
 from ncoreparser.util import Size, check_login
 from ncoreparser.torrent import Torrent
 
 
 class AsyncClient:
     def __init__(self, timeout=1):
-        self._client = httpx.AsyncClient(headers={'User-Agent': 'python ncoreparser'},
-                                         timeout=timeout,
-                                         follow_redirects=True)
+        self._client = httpx.AsyncClient(
+            headers={"User-Agent": "python ncoreparser"}, timeout=timeout, follow_redirects=True
+        )
         self._logged_in = False
         self._page_parser = TorrentsPageParser()
         self._detailed_parser = TorrenDetailParser()
@@ -40,15 +24,12 @@ class AsyncClient:
     async def login(self, username, password):
         self._client.cookies.clear()
         try:
-            r = await self._client.post(URLs.LOGIN.value,
-                                        data={"nev": username, "pass": password})
+            r = await self._client.post(URLs.LOGIN.value, data={"nev": username, "pass": password})
         except Exception as e:
-            raise NcoreConnectionError(f"Error while perform post "
-                                       f"method to url '{URLs.LOGIN.value}'.") from e
+            raise NcoreConnectionError(f"Error while perform post " f"method to url '{URLs.LOGIN.value}'.") from e
         if r.url != URLs.INDEX.value:
             await self.logout()
-            raise NcoreCredentialError(f"Error while login, check "
-                                       f"credentials for user: '{username}'")
+            raise NcoreCredentialError(f"Error while login, check " f"credentials for user: '{username}'")
         self._logged_in = True
 
     @check_login
@@ -60,17 +41,19 @@ class AsyncClient:
         where=SearchParamWhere.NAME,
         sort_by=ParamSort.UPLOAD,
         sort_order=ParamSeq.DECREASING,
-        number=None
+        number=None,
     ):
         page_count = 1
         torrents = []
         while number is None or len(torrents) < number:
-            url = URLs.DOWNLOAD_PATTERN.value.format(page=page_count,
-                                                     t_type=type.value,
-                                                     sort=sort_by.value,
-                                                     seq=sort_order.value,
-                                                     pattern=pattern,
-                                                     where=where.value)
+            url = URLs.DOWNLOAD_PATTERN.value.format(
+                page=page_count,
+                t_type=type.value,
+                sort=sort_by.value,
+                seq=sort_order.value,
+                pattern=pattern,
+                where=where.value,
+            )
             try:
                 request = await self._client.get(url)
             except Exception as e:
@@ -112,16 +95,21 @@ class AsyncClient:
             raise NcoreConnectionError(f"Error while get activity. Url: '{URLs.ACTIVITY.value}'. {e}") from e
 
         torrents = []
-        for id, start_t, updated_t, status, uploaded, downloaded, remaining_t, rate in \
-                self._activity_parser.get_params(content.text):
-            torrents.append(await self.get_torrent(id,
-                                                   start=start_t,
-                                                   updated=updated_t,
-                                                   status=status,
-                                                   uploaded=Size(uploaded),
-                                                   downloaded=Size(downloaded),
-                                                   remaining=remaining_t,
-                                                   rate=float(rate)))
+        for id, start_t, updated_t, status, uploaded, downloaded, remaining_t, rate in self._activity_parser.get_params(
+            content.text
+        ):
+            torrents.append(
+                await self.get_torrent(
+                    id,
+                    start=start_t,
+                    updated=updated_t,
+                    status=status,
+                    uploaded=Size(uploaded),
+                    downloaded=Size(downloaded),
+                    remaining=remaining_t,
+                    rate=float(rate),
+                )
+            )
         return torrents
 
     @check_login
@@ -133,7 +121,7 @@ class AsyncClient:
 
         for id in self._recommended_parser.get_ids(content.text):
             torrent = await self.get_torrent(id)
-            if not type or torrent['type'] == type:
+            if not type or torrent["type"] == type:
                 yield torrent
 
     @check_login
@@ -145,7 +133,7 @@ class AsyncClient:
             raise NcoreConnectionError(f"Error while downloading torrent. Url: '{url}'. {e}") from e
         if not override and os.path.exists(file_path):
             raise NcoreDownloadError(f"Error while downloading file: '{file_path}'. It is already exists.")
-        with open(file_path, 'wb') as fh:
+        with open(file_path, "wb") as fh:
             fh.write(content.content)
         return file_path
 

@@ -4,13 +4,7 @@ from ncoreparser.error import NcoreConnectionError
 
 
 class Size:
-    unit_size = {
-        "B": 1,
-        "KiB": 1024,
-        "MiB": 1024**2,
-        "GiB": 1024**3,
-        "TiB": 1024**4
-    }
+    unit_size = {"B": 1, "KiB": 1024, "MiB": 1024**2, "GiB": 1024**3, "TiB": 1024**4}
 
     def __init__(self, size, unit=None):
         self._unit = unit
@@ -91,7 +85,7 @@ def check_login(func):
     @functools.wraps(func)
     def wrapper(self, *args, **kwargs):
         if not self._logged_in:  # pylint: disable=protected-access
-            raise NcoreConnectionError("Cannot login to tracker. "
-                                       f"Please use {self.login.__name__} function first.")
+            raise NcoreConnectionError("Cannot login to tracker. " f"Please use {self.login.__name__} function first.")
         return func(self, *args, **kwargs)
+
     return wrapper

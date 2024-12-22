@@ -26,6 +26,10 @@ Repository = "https://github.com/radaron/ncoreparser.git"
 dev = [
   "pytest",
   "pylint",
+  "black",
   "tox",
   "tox-gh"
 ]
+
+[tool.black]
+line-length = 120

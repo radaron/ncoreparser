@@ -13,6 +13,9 @@ reqs: .venv
 lint:
 	$(ACTIVATE) && pylint ncoreparser
 
+format:
+	$(ACTIVATE) && black .
+
 test:
 	$(ACTIVATE) && tox
 
