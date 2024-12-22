@@ -27,9 +27,15 @@ dev = [
   "pytest",
   "pylint",
   "black",
+  "mypy",
   "tox",
   "tox-gh"
 ]
 
 [tool.black]
 line-length = 120
+
+[tool.mypy]
+disallow_untyped_calls = true
+disallow_incomplete_defs = true
+disallow_untyped_defs = true

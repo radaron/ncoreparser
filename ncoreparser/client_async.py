@@ -2,6 +2,7 @@
 
 import os
 import httpx
+from typing_extensions import Any, AsyncGenerator, Union
 from ncoreparser.data import URLs, SearchParamType, SearchParamWhere, ParamSort, ParamSeq
 from ncoreparser.error import NcoreConnectionError, NcoreCredentialError, NcoreDownloadError
 from ncoreparser.parser import TorrentsPageParser, TorrenDetailParser, RssParser, ActivityParser, RecommendedParser
@@ -10,7 +11,7 @@ from ncoreparser.torrent import Torrent
 
 
 class AsyncClient:
-    def __init__(self, timeout=1):
+    def __init__(self, timeout: int = 1) -> None:
         self._client = httpx.AsyncClient(
             headers={"User-Agent": "python ncoreparser"}, timeout=timeout, follow_redirects=True
         )
@@ -21,7 +22,7 @@ class AsyncClient:
         self._activity_parser = ActivityParser()
         self._recommended_parser = RecommendedParser()
 
-    async def login(self, username, password):
+    async def login(self, username: str, password: str) -> None:
         self._client.cookies.clear()
         try:
             r = await self._client.post(URLs.LOGIN.value, data={"nev": username, "pass": password})
@@ -36,15 +37,15 @@ class AsyncClient:
     # pylint: disable=too-many-arguments, too-many-positional-arguments
     async def search(
         self,
-        pattern,
-        type=SearchParamType.ALL_OWN,
-        where=SearchParamWhere.NAME,
-        sort_by=ParamSort.UPLOAD,
-        sort_order=ParamSeq.DECREASING,
-        number=None,
-    ):
+        pattern: str,
+        type: SearchParamType = SearchParamType.ALL_OWN,
+        where: SearchParamWhere = SearchParamWhere.NAME,
+        sort_by: ParamSort = ParamSort.UPLOAD,
+        sort_order: ParamSeq = ParamSeq.DECREASING,
+        number: Union[int, None] = None,
+    ) -> list[Torrent]:
         page_count = 1
-        torrents = []
+        torrents: list[Torrent] = []
         while number is None or len(torrents) < number:
             url = URLs.DOWNLOAD_PATTERN.value.format(
                 page=page_count,
@@ -66,7 +67,7 @@ class AsyncClient:
         return torrents[:number]
 
     @check_login
-    async def get_torrent(self, id, **ext_params):
+    async def get_torrent(self, id: str, **ext_params: Any) -> Torrent:
         url = URLs.DETAIL_PATTERN.value.format(id=id)
         try:
             content = await self._client.get(url)
@@ -78,7 +79,7 @@ class AsyncClient:
         return Torrent(**params)
 
     @check_login
-    async def get_by_rss(self, url):
+    async def get_by_rss(self, url: str) -> AsyncGenerator[Torrent, None]:
         try:
             content = await self._client.get(url)
         except Exception as e:
@@ -88,7 +89,7 @@ class AsyncClient:
             yield await self.get_torrent(id)
 
     @check_login
-    async def get_by_activity(self):
+    async def get_by_activity(self) -> list[Torrent]:
         try:
             content = await self._client.get(URLs.ACTIVITY.value)
         except Exception as e:
@@ -113,7 +114,7 @@ class AsyncClient:
         return torrents
 
     @check_login
-    async def get_recommended(self, type=None):
+    async def get_recommended(self, type: Union[SearchParamType, None] = None) -> AsyncGenerator[Torrent, None]:
         try:
             content = await self._client.get(URLs.RECOMMENDED.value)
         except Exception as e:
@@ -125,7 +126,7 @@ class AsyncClient:
                 yield torrent
 
     @check_login
-    async def download(self, torrent, path, override=False):
+    async def download(self, torrent: Torrent, path: str, override: bool = False) -> str:
         file_path, url = torrent.prepare_download(path)
         try:
             content = await self._client.get(url)
@@ -137,7 +138,7 @@ class AsyncClient:
             fh.write(content.content)
         return file_path
 
-    async def logout(self):
+    async def logout(self) -> None:
         self._client.cookies.clear()
         await self._client.aclose()
         self._logged_in = False

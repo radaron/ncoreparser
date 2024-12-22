@@ -1,5 +1,6 @@
 import os
 import httpx
+from typing_extensions import Any, Generator, Union
 from ncoreparser.data import URLs, SearchParamType, SearchParamWhere, ParamSort, ParamSeq
 from ncoreparser.error import NcoreConnectionError, NcoreCredentialError, NcoreDownloadError
 from ncoreparser.parser import TorrentsPageParser, TorrenDetailParser, RssParser, ActivityParser, RecommendedParser
@@ -8,7 +9,7 @@ from ncoreparser.torrent import Torrent
 
 
 class Client:
-    def __init__(self, timeout=1):
+    def __init__(self, timeout: int = 1) -> None:
         self._client = httpx.Client(
             headers={"User-Agent": "python ncoreparser"}, timeout=timeout, follow_redirects=True
         )
@@ -19,7 +20,7 @@ class Client:
         self._activity_parser = ActivityParser()
         self._recommended_parser = RecommendedParser()
 
-    def login(self, username, password):
+    def login(self, username: str, password: str) -> None:
         self._client.cookies.clear()
         try:
             r = self._client.post(URLs.LOGIN.value, data={"nev": username, "pass": password})
@@ -34,15 +35,15 @@ class Client:
     # pylint: disable=too-many-arguments, too-many-positional-arguments
     def search(
         self,
-        pattern,
-        type=SearchParamType.ALL_OWN,
-        where=SearchParamWhere.NAME,
-        sort_by=ParamSort.UPLOAD,
-        sort_order=ParamSeq.DECREASING,
-        number=None,
-    ):
+        pattern: str,
+        type: SearchParamType = SearchParamType.ALL_OWN,
+        where: SearchParamWhere = SearchParamWhere.NAME,
+        sort_by: ParamSort = ParamSort.UPLOAD,
+        sort_order: ParamSeq = ParamSeq.DECREASING,
+        number: Union[int, None] = None,
+    ) -> list[Torrent]:
         page_count = 1
-        torrents = []
+        torrents: list[Torrent] = []
         while number is None or len(torrents) < number:
             url = URLs.DOWNLOAD_PATTERN.value.format(
                 page=page_count,
@@ -64,7 +65,7 @@ class Client:
         return torrents[:number]
 
     @check_login
-    def get_torrent(self, id, **ext_params):
+    def get_torrent(self, id: str, **ext_params: Any) -> Torrent:
         url = URLs.DETAIL_PATTERN.value.format(id=id)
         try:
             content = self._client.get(url)
@@ -76,7 +77,7 @@ class Client:
         return Torrent(**params)
 
     @check_login
-    def get_by_rss(self, url):
+    def get_by_rss(self, url: str) -> Generator[Torrent, None, None]:
         try:
             content = self._client.get(url)
         except Exception as e:
@@ -86,7 +87,7 @@ class Client:
             yield self.get_torrent(id)
 
     @check_login
-    def get_by_activity(self):
+    def get_by_activity(self) -> list[Torrent]:
         try:
             content = self._client.get(URLs.ACTIVITY.value)
         except Exception as e:
@@ -111,7 +112,7 @@ class Client:
         return torrents
 
     @check_login
-    def get_recommended(self, type=None):
+    def get_recommended(self, type: Union[SearchParamType, None] = None) -> Generator[Torrent, None, None]:
         try:
             content = self._client.get(URLs.RECOMMENDED.value)
         except Exception as e:
@@ -123,7 +124,7 @@ class Client:
                 yield torrent
 
     @check_login
-    def download(self, torrent, path, override=False):
+    def download(self, torrent: Torrent, path: str, override: bool = False) -> str:
         file_path, url = torrent.prepare_download(path)
         try:
             content = self._client.get(url)
@@ -135,7 +136,7 @@ class Client:
             fh.write(content.content)
         return file_path
 
-    def logout(self):
+    def logout(self) -> None:
         self._client.cookies.clear()
         self._client.close()
         self._logged_in = False

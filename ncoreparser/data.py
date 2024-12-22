@@ -46,7 +46,7 @@ class SearchParamType(Enum):
     ALL_OWN = "all_own"
 
 
-def get_detailed_param(category, type):
+def get_detailed_param(category: str, type: str) -> SearchParamType:
     detailed = {
         "osszes_film_xvid_hun": SearchParamType.SD_HUN,
         "osszes_film_xvid": SearchParamType.SD,

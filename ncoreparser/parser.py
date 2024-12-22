@@ -1,12 +1,13 @@
 import re
 import datetime
+from typing_extensions import Generator, Any, Union
 from ncoreparser.error import NcoreParserError
 from ncoreparser.util import parse_datetime, Size
 from ncoreparser.data import SearchParamType, get_detailed_param
 
 
 class TorrentsPageParser:
-    def __init__(self):
+    def __init__(self) -> None:
         self.type_pattern = re.compile(
             r'<a href=".*\/torrents\.php\?tipus=(.*?)"><img src=".*" class="categ_link" alt=".*" title=".*">'
         )
@@ -20,21 +21,21 @@ class TorrentsPageParser:
         self.leechers_pattern = re.compile(r'<div class="box_l2"><a class="torrent" href=".*">([0-9]+)</a></div>')
 
     @staticmethod
-    def get_key(data):
+    def get_key(data: str) -> Union[str, None]:
         key_pattern = r'<link rel="alternate" href=".*?\/rss.php\?key=(?P<key>[a-z,0-9]+)" title=".*"'
         find = re.search(key_pattern, data)
         if find:
             return find.group("key")
         raise NcoreParserError(f"Error while read user " f"key with pattern: {key_pattern}")
 
-    def get_items(self, data):
+    def get_items(self, data: str) -> Generator[dict, None, None]:
         types = self.type_pattern.findall(data)
         ids_and_names = self.id_and_name_pattern.findall(data)
         dates_and_times = self.date_and_time_pattern.findall(data)
         sizes = self.size_pattern.findall(data)
         seed = self.seeders_pattern.findall(data)
         leech = self.leechers_pattern.findall(data)
-        ids = []
+        ids: tuple[Any, ...] = ()
         if len(types) != 0 and len(types) == len(ids_and_names) == len(dates_and_times) == len(sizes) == len(
             seed
         ) == len(leech):
@@ -58,7 +59,7 @@ class TorrentsPageParser:
 
 
 class TorrenDetailParser:
-    def __init__(self):
+    def __init__(self) -> None:
         self.type_pattern = re.compile(
             r'<div class="dd"><a title=".*?" href=".*?torrents.php\?csoport_listazas='
             r'(?P<category>.*?)">.*?</a>.*?<a title=".*?" href=".*?torrents.php\?tipus='
@@ -76,32 +77,50 @@ class TorrenDetailParser:
             re.DOTALL,
         )
 
-    def get_item(self, data):
+    def get_item(self, data: str) -> dict:
         try:
-            t_type = self.type_pattern.search(data)
-            t_type = get_detailed_param(t_type.group("category"), t_type.group("type"))
-            date = datetime.datetime.strptime(self.date_pattern.search(data).group("date"), "%Y-%m-%d %H:%M:%S")
-            title = self.title_pattern.search(data).group("title")
+            t_type_match = self.type_pattern.search(data)
+            if t_type_match:
+                t_type = get_detailed_param(t_type_match.group("category"), t_type_match.group("type"))
+            else:
+                raise NcoreParserError("Type pattern not found in data")
+            date_match = self.date_pattern.search(data)
+            if date_match:
+                date = datetime.datetime.strptime(date_match.group("date"), "%Y-%m-%d %H:%M:%S")
+            else:
+                raise NcoreParserError("Date pattern not found in data")
+            title_match = self.title_pattern.search(data)
+            if title_match:
+                title = title_match.group("title")
+            else:
+                raise NcoreParserError("Title pattern not found in data")
             key = TorrentsPageParser.get_key(data)
-            size = Size(self.size_pattern.search(data).group("size"))
-            peers = self.peers_pattern.search(data)
-            seed = peers.group("seed")
-            leech = peers.group("leech")
+            size_match = self.size_pattern.search(data)
+            if size_match:
+                size = Size(size_match.group("size"))
+            else:
+                raise NcoreParserError("Size pattern not found in data")
+            peers_match = self.peers_pattern.search(data)
+            if peers_match:
+                seed = peers_match.group("seed")
+                leech = peers_match.group("leech")
+            else:
+                raise NcoreParserError("Peers pattern not found in data")
         except AttributeError as e:
             raise NcoreParserError(f"Error while parsing by detailed page. {e}") from e
         return {"title": title, "key": key, "date": date, "size": size, "type": t_type, "seed": seed, "leech": leech}
 
 
 class RssParser:
-    def __init__(self):
+    def __init__(self) -> None:
         self.id_pattern = re.compile(r'<source url=".*?\/rss_dl.php\/id=(?P<id>[0-9]+)\/key\=.[a-z,0-9]+">')
 
-    def get_ids(self, data):
+    def get_ids(self, data: str) -> list[str]:
         return self.id_pattern.findall(data)
 
 
 class ActivityParser:
-    def __init__(self):
+    def __init__(self) -> None:
         self.patterns = [
             re.compile(r'onclick="torrent\((.*?)\);'),
             re.compile(r'<div class="hnr_tstart">(.*?)<\/div>'),
@@ -113,7 +132,7 @@ class ActivityParser:
             re.compile(r'<div class="hnr_tratio"><span class=".*?">(.*?)<\/span><\/div>'),
         ]
 
-    def get_params(self, data):
+    def get_params(self, data: str) -> tuple[tuple[Any, ...], ...]:
         out = []
         for parser in self.patterns:
             out.append(parser.findall(data))
@@ -121,11 +140,11 @@ class ActivityParser:
 
 
 class RecommendedParser:
-    def __init__(self):
+    def __init__(self) -> None:
         self.recommended_pattern = re.compile(
             r'<a href=".*?torrents.php\?action=details\&id=(.*?)" target=".*?"><img'
             r' src=".*?" width=".*?" height=".*?" border=".*?" title=".*?"\/><\/a>'
         )
 
-    def get_ids(self, data):
+    def get_ids(self, data: str) -> list[str]:
         return self.recommended_pattern.findall(data)
