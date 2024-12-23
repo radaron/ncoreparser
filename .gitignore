@@ -6,3 +6,6 @@ dist/
 ncoreparser.egg-info/
 .venv
 .vscode
+.env.sh
+*.torrent
+.tox*
