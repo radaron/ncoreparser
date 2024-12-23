@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "ncoreparser"
-version = "3.0.0"
+version = "3.1.0"
 description = "Package to download from ncore.pro"
 authors = [
   { name="Aron Radics", email="aron.radics.jozsef@gmail.com" }
@@ -15,7 +15,7 @@ readme = "Readme.md"
 dependencies = [
   "httpx>=0.26.0",
 ]
-requires-python = ">=3.9,<3.13"
+requires-python = ">=3.9"
 
 
 [project.urls]
@@ -26,6 +26,16 @@ Repository = "https://github.com/radaron/ncoreparser.git"
 dev = [
   "pytest",
   "pylint",
+  "black",
+  "mypy",
   "tox",
   "tox-gh"
 ]
+
+[tool.black]
+line-length = 120
+
+[tool.mypy]
+disallow_untyped_calls = true
+disallow_incomplete_defs = true
+disallow_untyped_defs = true

@@ -50,5 +50,5 @@ class TestNcoreParser:
             for file in files:
                 if file.endswith(".torrent"):
                     path = os.path.join(root, file)
-                    file_content = open(path, 'rb').read()
+                    file_content = open(path, "rb").read()
                     assert len(file_content) > 0

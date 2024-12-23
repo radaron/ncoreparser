@@ -12,6 +12,10 @@ reqs: .venv
 
 lint:
 	$(ACTIVATE) && pylint ncoreparser
+	$(ACTIVATE) && mypy ncoreparser
+
+format:
+	$(ACTIVATE) && black .
 
 test:
 	$(ACTIVATE) && tox
