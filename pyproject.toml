@@ -15,7 +15,7 @@ readme = "Readme.md"
 dependencies = [
   "httpx>=0.26.0",
 ]
-requires-python = ">=3.9,<3.13"
+requires-python = ">=3.9"
 
 
 [project.urls]
