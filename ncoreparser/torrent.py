@@ -19,6 +19,7 @@ class Torrent:
             "seed": seed,
             "leech": leech,
             "download": URLs.DOWNLOAD_LINK.value.format(id=id, key=key),
+            "url": URLs.DETAIL_PATTERN.value.format(id=id),
         }
         self._details.update(params)
 
