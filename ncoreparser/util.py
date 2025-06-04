@@ -1,6 +1,6 @@
 import datetime
 import functools
-from typing_extensions import Self, Callable, Any, Union
+from typing_extensions import Self, Callable, Any, Union  # pylint: disable=no-name-in-module
 from ncoreparser.error import NcoreConnectionError
 
 

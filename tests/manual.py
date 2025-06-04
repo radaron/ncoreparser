@@ -55,22 +55,18 @@ if __name__ == "__main__":
 
     print_category("Most seeded torrents/category")
     for t_type in SearchParamType:
-        torrent = client.search(
-            pattern="", type=t_type, number=1, sort_by=ParamSort.SEEDERS, sort_order=ParamSeq.DECREASING
-        )[0]
-        pretty_print(torrent)
+        result = client.search(pattern="", type=t_type, sort_by=ParamSort.SEEDERS, sort_order=ParamSeq.DECREASING)
+        pretty_print(result.torrents[0])
 
-    print("")
-    print("Donwnload torrent")
-    torrent = client.search(
-        pattern="Forrest gump",
+    print_category("Donwnload torrent")
+    result = client.search(
+        pattern="Forrest",
         type=SearchParamType.HD_HUN,
-        number=1,
         sort_by=ParamSort.SEEDERS,
         sort_order=ParamSeq.DECREASING,
-    )[0]
-
-    client.download(torrent, "/tmp", override=True)
+    )
+    pretty_print(result.torrents[0])
+    client.download(result.torrents[0], "/tmp", override=True)
 
     print_category("List by rss")
     torrents = client.get_by_rss(args.rss_feed)

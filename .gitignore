@@ -7,5 +7,6 @@ ncoreparser.egg-info/
 .venv
 .vscode
 .env.sh
+.env
 *.torrent
 .tox*

@@ -1,11 +1,12 @@
 import os
 import httpx
-from typing_extensions import Any, Generator, Union
+from typing_extensions import Any, Generator, Union  # pylint: disable=no-name-in-module
 from ncoreparser.data import URLs, SearchParamType, SearchParamWhere, ParamSort, ParamSeq
 from ncoreparser.error import NcoreConnectionError, NcoreCredentialError, NcoreDownloadError
 from ncoreparser.parser import TorrentsPageParser, TorrenDetailParser, RssParser, ActivityParser, RecommendedParser
 from ncoreparser.util import Size, check_login
 from ncoreparser.torrent import Torrent
+from ncoreparser.types import SearchResult
 
 
 class Client:
@@ -40,29 +41,23 @@ class Client:
         where: SearchParamWhere = SearchParamWhere.NAME,
         sort_by: ParamSort = ParamSort.UPLOAD,
         sort_order: ParamSeq = ParamSeq.DECREASING,
-        number: Union[int, None] = None,
-    ) -> list[Torrent]:
-        page_count = 1
-        torrents: list[Torrent] = []
-        while number is None or len(torrents) < number:
-            url = URLs.DOWNLOAD_PATTERN.value.format(
-                page=page_count,
-                t_type=type.value,
-                sort=sort_by.value,
-                seq=sort_order.value,
-                pattern=pattern,
-                where=where.value,
-            )
-            try:
-                request = self._client.get(url)
-            except Exception as e:
-                raise NcoreConnectionError(f"Error while searhing torrents. {e}") from e
-            new_torrents = [Torrent(**params) for params in self._page_parser.get_items(request.text)]
-            torrents.extend(new_torrents)
-            if number is None or len(new_torrents) == 0:
-                return torrents
-            page_count += 1
-        return torrents[:number]
+        page: int = 1,
+    ) -> SearchResult:
+        url = URLs.DOWNLOAD_PATTERN.value.format(
+            page=page,
+            t_type=type.value,
+            sort=sort_by.value,
+            seq=sort_order.value,
+            pattern=pattern,
+            where=where.value,
+        )
+        try:
+            request = self._client.get(url)
+        except Exception as e:
+            raise NcoreConnectionError(f"Error while searhing torrents. {e}") from e
+        torrents = [Torrent(**params) for params in self._page_parser.get_items(request.text)]
+        num_of_pages = self._page_parser.get_num_of_pages(request.text)
+        return SearchResult(torrents=torrents, num_of_pages=num_of_pages)
 
     @check_login
     def get_torrent(self, id: str, **ext_params: Any) -> Torrent:
