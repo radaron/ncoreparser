@@ -31,8 +31,12 @@ if __name__ == "__main__":
     client.login("<username>", "<password>")
 
     for t_type in SearchParamType:
-        torrent = client.search(pattern="", type=t_type, number=1,
-                                sort_by=ParamSort.SEEDERS, sort_order=ParamSeq.DECREASING)[0]
+        torrent = client.search(
+            pattern="",
+            type=t_type,
+            sort_by=ParamSort.SEEDERS,
+            sort_order=ParamSeq.DECREASING
+        )[0]
         print(torrent['title'], torrent['type'], torrent['size'], torrent['id'])
 
     client.logout()
@@ -50,8 +54,12 @@ if __name__ == "__main__":
     client.login("<username>", "<password>")
 
 
-    torrent = client.search(pattern="Forrest gump", type=SearchParamType.HD_HUN, number=1,
-                            sort_by=ParamSort.SEEDERS, sort_order=ParamSeq.DECREASING)[0]
+    torrent = client.search(
+        pattern="Forrest gump",
+        type=SearchParamType.HD_HUN,
+        sort_by=ParamSort.SEEDERS,
+        sort_order=ParamSeq.DECREASING
+    )[0]
 
     client.download(torrent, "/tmp")
     client.logout()
@@ -88,8 +96,14 @@ if __name__ == "__main__":
 
     torrents = client.get_by_activity()
     for torrent in torrents:
-        print(torrent['title'], torrent['type'], torrent['size'],
-              torrent['id'], torrent['rate'], torrent['remaining'])
+        print(
+            torrent['title'],
+            torrent['type'],
+            torrent['size'],
+            torrent['id'],
+            torrent['rate'],
+            torrent['remaining']
+        )
 
     client.logout()
 ```
@@ -125,8 +139,12 @@ async def main():
     await client.login("<username>", "<password>")
 
     for t_type in SearchParamType:
-        torrent = await client.search(pattern="", type=t_type, number=1,
-                                      sort_by=ParamSort.SEEDERS, sort_order=ParamSeq.DECREASING)[0]
+        torrent = await client.search(
+            pattern="",
+            type=t_type,
+            sort_by=ParamSort.SEEDERS,
+            sort_order=ParamSeq.DECREASING
+        )[0]
         print(torrent['title'], torrent['type'], torrent['size'], torrent['id'])
 
     await client.logout()

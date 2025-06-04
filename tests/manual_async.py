@@ -56,7 +56,7 @@ async def main():
     print_category("Most seeded torrents/category")
     for t_type in SearchParamType:
         torrents = await client.search(
-            pattern="", type=t_type, number=1, sort_by=ParamSort.SEEDERS, sort_order=ParamSeq.DECREASING
+            pattern="", type=t_type, sort_by=ParamSort.SEEDERS, sort_order=ParamSeq.DECREASING
         )
         pretty_print(torrents[0])
 
@@ -65,7 +65,6 @@ async def main():
     torrents = await client.search(
         pattern="Forrest gump",
         type=SearchParamType.HD_HUN,
-        number=1,
         sort_by=ParamSort.SEEDERS,
         sort_order=ParamSeq.DECREASING,
     )

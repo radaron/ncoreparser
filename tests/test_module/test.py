@@ -1,5 +1,5 @@
-import pytest
 import os
+import pytest
 from ncoreparser import Client, SearchParamType
 from ncoreparser.torrent import Torrent
 
@@ -15,12 +15,9 @@ class TestNcoreParser:
         return c
 
     def test_search(self, client):
-        torrents = client.search(pattern="forrest gump", type=SearchParamType.HD, number=1)
+        torrents = client.search(pattern="forrest gump", type=SearchParamType.HD)
 
-        assert len(torrents) == 1
-        torrent = torrents[0]
-
-        assert isinstance(torrent, Torrent)
+        assert isinstance(torrents[0], Torrent)
 
     def test_rss(self, client):
         rss_url = os.environ["RSS_URL"]
@@ -42,7 +39,7 @@ class TestNcoreParser:
             assert torrent["type"] == SearchParamType.HDSER_HUN
 
     def test_download(self, client):
-        torrent = client.search(pattern="forrest gump", type=SearchParamType.HD_HUN, number=1)[0]
+        torrent = client.search(pattern="forrest gump", type=SearchParamType.HD_HUN)[0]
 
         client.download(torrent, ".", override=True)
 

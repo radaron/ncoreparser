@@ -5,3 +5,4 @@ from .data import SearchParamType, SearchParamWhere, ParamSeq, ParamSort
 from .error import NcoreDownloadError, NcoreParserError, NcoreCredentialError, NcoreConnectionError
 from .util import Size
 from .torrent import Torrent
+from .types import SearchResult

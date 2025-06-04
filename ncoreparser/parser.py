@@ -1,12 +1,14 @@
+import math
 import re
 import datetime
-from typing_extensions import Generator, Any, Union
+from typing_extensions import Generator, Any, Union  # pylint: disable=no-name-in-module
 from ncoreparser.error import NcoreParserError
 from ncoreparser.util import parse_datetime, Size
 from ncoreparser.data import SearchParamType, get_detailed_param
 
 
 class TorrentsPageParser:
+    # pylint: disable=too-many-instance-attributes
     def __init__(self) -> None:
         self.type_pattern = re.compile(
             r'<a href=".*\/torrents\.php\?tipus=(.*?)"><img src=".*" class="categ_link" alt=".*" title=".*">'
@@ -19,6 +21,8 @@ class TorrentsPageParser:
         self.not_found_pattern = re.compile(r'<div class="lista_mini_error">Nincs találat!</div>')
         self.seeders_pattern = re.compile(r'<div class="box_s2"><a class="torrent" href=".*">([0-9]+)</a></div>')
         self.leechers_pattern = re.compile(r'<div class="box_l2"><a class="torrent" href=".*">([0-9]+)</a></div>')
+        self.current_page_pattern = re.compile(r'<span class="active_link"><strong>(\d+).*?</strong></span>')
+        self.last_page_pattern = re.compile(r'<a href="/torrents\.php\?oldal=(\d+)[^>]*><strong>Utolsó</strong></a>')
 
     @staticmethod
     def get_key(data: str) -> Union[str, None]:
@@ -56,6 +60,19 @@ class TorrentsPageParser:
                 "seed": seed[i],
                 "leech": leech[i],
             }
+
+    def get_num_of_pages(self, data: str) -> int:
+        current_num_of_items_found = self.current_page_pattern.search(data)
+        last_page_found = self.last_page_pattern.search(data)
+
+        num_of_pages = 0
+        if current_num_of_items_found:
+            current_num_of_items = int(current_num_of_items_found.group(1))
+            num_of_pages = math.ceil(current_num_of_items / 25)
+        if last_page_found:
+            last_page = int(last_page_found.group(1))
+            num_of_pages = max(num_of_pages, last_page)
+        return num_of_pages
 
 
 class TorrenDetailParser:
