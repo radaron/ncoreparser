@@ -15,9 +15,9 @@ class TestNcoreParser:
         return c
 
     def test_search(self, client):
-        torrents = client.search(pattern="forrest gump", type=SearchParamType.HD)
+        result = client.search(pattern="forrest gump", type=SearchParamType.HD)
 
-        assert isinstance(torrents[0], Torrent)
+        assert isinstance(result.torrents[0], Torrent)
 
     def test_rss(self, client):
         rss_url = os.environ["RSS_URL"]
@@ -39,9 +39,9 @@ class TestNcoreParser:
             assert torrent["type"] == SearchParamType.HDSER_HUN
 
     def test_download(self, client):
-        torrent = client.search(pattern="forrest gump", type=SearchParamType.HD_HUN)[0]
+        result = client.search(pattern="forrest gump", type=SearchParamType.HD_HUN)
 
-        client.download(torrent, ".", override=True)
+        client.download(result.torrents[0], ".", override=True)
 
         for root, _, files in os.walk("."):
             for file in files:
