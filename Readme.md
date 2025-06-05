@@ -36,7 +36,7 @@ if __name__ == "__main__":
             type=t_type,
             sort_by=ParamSort.SEEDERS,
             sort_order=ParamSeq.DECREASING
-        )[0]
+        ).torrents[0]
         print(torrent['title'], torrent['type'], torrent['size'], torrent['id'])
 
     client.logout()
@@ -59,7 +59,7 @@ if __name__ == "__main__":
         type=SearchParamType.HD_HUN,
         sort_by=ParamSort.SEEDERS,
         sort_order=ParamSeq.DECREASING
-    )[0]
+    ).torrents[0]
 
     client.download(torrent, "/tmp")
     client.logout()
@@ -144,7 +144,7 @@ async def main():
             type=t_type,
             sort_by=ParamSort.SEEDERS,
             sort_order=ParamSeq.DECREASING
-        )[0]
+        ).torrents[0]
         print(torrent['title'], torrent['type'], torrent['size'], torrent['id'])
 
     await client.logout()
