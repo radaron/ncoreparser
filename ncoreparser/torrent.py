@@ -4,6 +4,10 @@ from ncoreparser.data import URLs
 from ncoreparser.util import Size
 
 
+def get_torrent_page_url(torrent_id: str) -> str:
+    return URLs.DETAIL_PATTERN.value.format(id=torrent_id)
+
+
 class Torrent:
     # pylint: disable=too-many-arguments, too-many-positional-arguments
     def __init__(
@@ -19,7 +23,7 @@ class Torrent:
             "seed": seed,
             "leech": leech,
             "download": URLs.DOWNLOAD_LINK.value.format(id=id, key=key),
-            "url": URLs.DETAIL_PATTERN.value.format(id=id),
+            "url": get_torrent_page_url(torrent_id=id),
         }
         self._details.update(params)
 
