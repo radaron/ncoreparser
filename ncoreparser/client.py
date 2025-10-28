@@ -1,4 +1,5 @@
 import os
+import json
 import httpx
 from typing_extensions import Any, Generator, Union  # pylint: disable=no-name-in-module
 from ncoreparser.data import URLs, SearchParamType, SearchParamWhere, ParamSort, ParamSeq
@@ -10,27 +11,92 @@ from ncoreparser.types import SearchResult
 
 
 class Client:
-    def __init__(self, timeout: int = 1) -> None:
+    def __init__(self, timeout: int = 1, cookie_file: str = "ncore_cookies.json") -> None:
         self._client = httpx.Client(
             headers={"User-Agent": "python ncoreparser"}, timeout=timeout, follow_redirects=True
         )
         self._logged_in = False
+        self._cookie_file = cookie_file
         self._page_parser = TorrentsPageParser()
         self._detailed_parser = TorrenDetailParser()
         self._rss_parser = RssParser()
         self._activity_parser = ActivityParser()
         self._recommended_parser = RecommendedParser()
+        self._allowed_cookies = ['nick', 'pass', 'stilus', 'nyelv', 'PHPSESSID']
+        self._load_cookies()
 
-    def login(self, username: str, password: str) -> None:
-        self._client.cookies.clear()
+    def _save_cookies(self) -> None:
+        cookies_to_save = {}
+        for cookie in self._client.cookies.jar:
+            if cookie.name in self._allowed_cookies:
+                cookies_to_save[cookie.name] = cookie.value
+        
+        if cookies_to_save:
+            try:
+                with open(self._cookie_file, 'w') as f:
+                    json.dump(cookies_to_save, f)
+            except Exception as e:
+                print(f"Warning: Could not save cookies: {e}")
+
+    def _load_cookies(self) -> None:
+        if not os.path.exists(self._cookie_file):
+            return
+        
         try:
-            r = self._client.post(URLs.LOGIN.value, data={"nev": username, "pass": password})
+            with open(self._cookie_file, 'r') as f:
+                cookies = json.load(f)
+            
+            for name, value in cookies.items():
+                if name in self._allowed_cookies:
+                    self._client.cookies.set(name, value, domain="ncore.pro")
+            
+            if self._check_logged_in():
+                self._logged_in = True
         except Exception as e:
-            raise NcoreConnectionError(f"Error while perform post " f"method to url '{URLs.LOGIN.value}'.") from e
-        if r.url != URLs.INDEX.value:
+            print(f"Warning: Could not load cookies: {e}")
+            self._client.cookies.clear()
+
+    def _check_logged_in(self) -> bool:
+        try:
+            r = self._client.get(URLs.INDEX.value)
+            if 'login.php' in str(r.url) or '<title>nCore</title>' in r.text:
+                return False
+            return True
+        except Exception:
+            return False
+
+    def login(self, username: str, password: str, twofactorcode: str = "") -> None:
+        if self._logged_in and self._check_logged_in():
+            return
+        
+        self._client.cookies.clear()
+        self._logged_in = False
+        
+        try:
+            login_data = {
+                "nev": username, 
+                "pass": password,
+                "set_lang": "hu",
+                "submitted": "1",
+                "ne_leptessen_ki": "1"
+            }
+            
+            if twofactorcode:
+                login_data["2factor"] = twofactorcode
+            
+            r = self._client.post(URLs.LOGIN.value, data=login_data)
+        except Exception as e:
+            raise NcoreConnectionError(f"Error while performing post method to url '{URLs.LOGIN.value}'.") from e
+        
+        if r.url != URLs.INDEX.value or '<title>nCore</title>' in r.text:
             self.logout()
-            raise NcoreCredentialError(f"Error while login, check " f"credentials for user: '{username}'")
+            error_msg = f"Error while login, check credentials for user: '{username}'"
+            if twofactorcode:
+                error_msg += ". Invalid 2FA code or wait 5 minutes between login attempts."
+            raise NcoreCredentialError(error_msg)
+        
         self._logged_in = True
+        self._save_cookies()
 
     @check_login
     # pylint: disable=too-many-arguments, too-many-positional-arguments
@@ -54,7 +120,7 @@ class Client:
         try:
             request = self._client.get(url)
         except Exception as e:
-            raise NcoreConnectionError(f"Error while searhing torrents. {e}") from e
+            raise NcoreConnectionError(f"Error while searching torrents. {e}") from e
         torrents = [Torrent(**params) for params in self._page_parser.get_items(request.text)]
         num_of_pages = self._page_parser.get_num_of_pages(request.text)
         return SearchResult(torrents=torrents, num_of_pages=num_of_pages)
@@ -135,3 +201,8 @@ class Client:
         self._client.cookies.clear()
         self._client.close()
         self._logged_in = False
+        if os.path.exists(self._cookie_file):
+            try:
+                os.remove(self._cookie_file)
+            except Exception as e:
+                print(f"Warning: Could not remove cookie file: {e}")
