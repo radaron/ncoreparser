@@ -114,3 +114,4 @@ class URLs(Enum):
     )
     DETAIL_PATTERN = TORRENTS_BASE + "?action=details&id={id}"
     DOWNLOAD_LINK = "https://ncore.pro/torrents.php?action=download&id={id}&key={key}"
+    COOKIE_DOMAIN = "ncore.pro"
