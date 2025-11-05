@@ -2,17 +2,18 @@
 
 import os
 import httpx
+from typing import Dict, Optional
 from typing_extensions import Any, AsyncGenerator, Union  # pylint: disable=no-name-in-module
 from ncoreparser.data import URLs, SearchParamType, SearchParamWhere, ParamSort, ParamSeq
 from ncoreparser.error import NcoreConnectionError, NcoreCredentialError, NcoreDownloadError
 from ncoreparser.parser import TorrentsPageParser, TorrenDetailParser, RssParser, ActivityParser, RecommendedParser
-from ncoreparser.util import Size, check_login
+from ncoreparser.util import Size, check_login, extract_cookies_from_client, set_cookies_to_client
 from ncoreparser.torrent import Torrent
 from ncoreparser.types import SearchResult
 
 
 class AsyncClient:
-    def __init__(self, timeout: int = 1) -> None:
+    def __init__(self, timeout: int = 1, cookies: Optional[Dict[str, str]] = None) -> None:
         self._client = httpx.AsyncClient(
             headers={"User-Agent": "python ncoreparser"}, timeout=timeout, follow_redirects=True
         )
@@ -22,17 +23,52 @@ class AsyncClient:
         self._rss_parser = RssParser()
         self._activity_parser = ActivityParser()
         self._recommended_parser = RecommendedParser()
+        self._allowed_cookies = ['nick', 'pass', 'stilus', 'nyelv', 'PHPSESSID']
+        if cookies:
+            set_cookies_to_client(self._client, cookies, self._allowed_cookies, URLs.COOKIE_DOMAIN.value)
+            # Note: Cookie validation for async client happens on first operation since we can't await in __init__
 
-    async def login(self, username: str, password: str) -> None:
-        self._client.cookies.clear()
+    async def _check_logged_in(self) -> bool:
         try:
-            r = await self._client.post(URLs.LOGIN.value, data={"nev": username, "pass": password})
+            r = await self._client.get(URLs.INDEX.value)
+            if 'login.php' in str(r.url) or '<title>nCore</title>' in r.text:
+                return False
+            return True
+        except Exception:
+            return False
+
+    async def login(self, username: str, password: str, twofactorcode: str = "") -> Dict[str, str]:
+        if self._logged_in and await self._check_logged_in():
+            return extract_cookies_from_client(self._client, self._allowed_cookies, URLs.COOKIE_DOMAIN.value)
+        
+        self._client.cookies.clear()
+        self._logged_in = False
+        
+        try:
+            login_data = {
+                "nev": username, 
+                "pass": password,
+                "set_lang": "hu",
+                "submitted": "1",
+                "ne_leptessen_ki": "1"
+            }
+            
+            if twofactorcode:
+                login_data["2factor"] = twofactorcode
+            
+            r = await self._client.post(URLs.LOGIN.value, data=login_data)
         except Exception as e:
-            raise NcoreConnectionError(f"Error while perform post " f"method to url '{URLs.LOGIN.value}'.") from e
-        if r.url != URLs.INDEX.value:
+            raise NcoreConnectionError(f"Error while performing post method to url '{URLs.LOGIN.value}'.") from e
+        
+        if r.url != URLs.INDEX.value or '<title>nCore</title>' in r.text:
             await self.logout()
-            raise NcoreCredentialError(f"Error while login, check " f"credentials for user: '{username}'")
+            error_msg = f"Error while login, check credentials for user: '{username}'"
+            if twofactorcode:
+                error_msg += ". Invalid 2FA code or wait 5 minutes between login attempts."
+            raise NcoreCredentialError(error_msg)
+        
         self._logged_in = True
+        return extract_cookies_from_client(self._client, self._allowed_cookies, URLs.COOKIE_DOMAIN.value)
 
     @check_login
     # pylint: disable=too-many-arguments, too-many-positional-arguments
