@@ -1,7 +1,7 @@
 import math
 import re
 import datetime
-from typing_extensions import Generator, Any, Union  # pylint: disable=no-name-in-module
+from typing import Generator, Any, Union
 from ncoreparser.error import NcoreParserError
 from ncoreparser.util import parse_datetime, Size
 from ncoreparser.data import SearchParamType, get_detailed_param

@@ -1,9 +1,14 @@
 import datetime
 import functools
-from typing import Dict
-from typing_extensions import Self, Callable, Any, Union  # pylint: disable=no-name-in-module
+import sys
+from typing import Dict, Callable, Any, Union
 from ncoreparser.error import NcoreConnectionError
 from ncoreparser.data import URLs
+
+if sys.version_info >= (3, 11):
+    from typing import Self
+else:
+    from typing_extensions import Self
 
 
 class Size:

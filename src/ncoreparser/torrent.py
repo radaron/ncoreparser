@@ -1,5 +1,5 @@
 import os
-from typing_extensions import Any
+from typing import Any
 from ncoreparser.data import URLs
 from ncoreparser.util import Size
 
