@@ -1,6 +1,7 @@
-import time
 import argparse
-from ncoreparser import Client, SearchParamType, ParamSort, ParamSeq
+import time
+
+from ncoreparser import Client, ParamSeq, ParamSort, SearchParamType
 
 
 def print_category(msg):

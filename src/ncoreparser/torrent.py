@@ -1,5 +1,6 @@
 import os
 from typing import Any
+
 from ncoreparser.data import URLs
 from ncoreparser.util import Size
 
@@ -9,7 +10,6 @@ def get_torrent_page_url(torrent_id: str) -> str:
 
 
 class Torrent:
-    # pylint: disable=too-many-arguments, too-many-positional-arguments
     def __init__(
         self, id: str, title: str, key: str, size: Size, type: str, date: str, seed: str, leech: str, **params: Any
     ) -> None:

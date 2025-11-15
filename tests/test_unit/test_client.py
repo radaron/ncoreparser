@@ -1,13 +1,14 @@
 from unittest.mock import MagicMock
-from ncoreparser.client import Client
-from ncoreparser.error import NcoreConnectionError, NcoreCredentialError
-from ncoreparser.data import URLs
+
 import httpx
 import pytest
 
+from ncoreparser.client import Client
+from ncoreparser.data import URLs
+from ncoreparser.error import NcoreConnectionError, NcoreCredentialError
+
 
 class TestClient:
-
     def test_credentials(self, monkeypatch):
         client_stub = MagicMock()
         client_stub.return_value.post.return_value.url = URLs.INDEX.value

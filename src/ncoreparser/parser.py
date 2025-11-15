@@ -1,14 +1,14 @@
+import datetime
 import math
 import re
-import datetime
-from typing import Generator, Any, Union
-from ncoreparser.error import NcoreParserError
-from ncoreparser.util import parse_datetime, Size
+from typing import Any, Generator, Union
+
 from ncoreparser.data import SearchParamType, get_detailed_param
+from ncoreparser.error import NcoreParserError
+from ncoreparser.util import Size, parse_datetime
 
 
 class TorrentsPageParser:
-    # pylint: disable=too-many-instance-attributes
     def __init__(self) -> None:
         self.type_pattern = re.compile(
             r'<a href=".*\/torrents\.php\?tipus=(.*?)"><img src=".*" class="categ_link" alt=".*" title=".*">'
@@ -30,7 +30,7 @@ class TorrentsPageParser:
         find = re.search(key_pattern, data)
         if find:
             return find.group("key")
-        raise NcoreParserError(f"Error while read user " f"key with pattern: {key_pattern}")
+        raise NcoreParserError(f"Error while read user key with pattern: {key_pattern}")
 
     def get_items(self, data: str) -> Generator[dict, None, None]:
         types = self.type_pattern.findall(data)

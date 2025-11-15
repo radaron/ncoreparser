@@ -1,6 +1,6 @@
 [project]
 name = "ncoreparser"
-version = "4.5.1"
+version = "4.5.2"
 description = "Package to download from ncore.pro"
 authors = [
   { name="Aron Radics", email="aron.radics.jozsef@gmail.com" }
@@ -15,8 +15,7 @@ requires-python = ">=3.9"
 [dependency-groups]
 dev = [
   "pytest",
-  "pylint",
-  "black",
+  "ruff",
   "mypy",
 ]
 
@@ -27,7 +26,7 @@ Repository = "https://github.com/radaron/ncoreparser.git"
 requires = ["uv_build>=0.9.2,<0.10.0"]
 build-backend = "uv_build"
 
-[tool.black]
+[tool.ruff]
 line-length = 120
 
 [tool.mypy]

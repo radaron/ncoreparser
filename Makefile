@@ -6,11 +6,13 @@ install:
 	uv sync --dev
 
 lint:
-	uv run pylint src/ncoreparser
+	uv run ruff check src/ncoreparser
+	uv run ruff check --select I .
 	uv run mypy src/ncoreparser
 
 format:
-	uv run black .
+	uv run ruff check --select I --fix .
+	uv run ruff format .
 
 test:
 	uv run pytest
@@ -25,10 +27,6 @@ module-test:
 manual-test:
 	$(LOAD_ENV) uv run python -m tests.manual --user ${NCORE_USERNAME} \
 		--passw "${NCORE_PASSWORD}" --rss-feed "${RSS_URL}"
-
-git-tag:
-	git tag v$(shell uv version --short)
-	git push --tags
 
 bump-version:
 	uv version --bump minor

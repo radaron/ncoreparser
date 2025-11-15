@@ -1,7 +1,8 @@
-import time
 import argparse
 import asyncio
-from ncoreparser import AsyncClient, SearchParamType, ParamSort, ParamSeq
+import time
+
+from ncoreparser import AsyncClient, ParamSeq, ParamSort, SearchParamType
 
 
 def print_category(msg):

@@ -1,11 +1,12 @@
 import os
+
 import pytest
+
 from ncoreparser import Client, SearchParamType
 from ncoreparser.torrent import Torrent
 
 
 class TestNcoreParser:
-
     @pytest.fixture(scope="class")
     def client(self):
         username = os.environ["NCORE_USERNAME"]

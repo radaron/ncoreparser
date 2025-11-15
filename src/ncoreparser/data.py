@@ -1,4 +1,5 @@
 from enum import Enum
+
 from ncoreparser.error import NcoreParserError
 
 
@@ -105,12 +106,7 @@ class URLs(Enum):
     RECOMMENDED = "https://ncore.pro/recommended.php"
     TORRENTS_BASE = "https://ncore.pro/torrents.php"
     DOWNLOAD_PATTERN = (
-        TORRENTS_BASE + "?oldal={page}"
-        "&tipus={t_type}"
-        "&miszerint={sort}"
-        "&hogyan={seq}"
-        "&mire={pattern}"
-        "&miben={where}"
+        TORRENTS_BASE + "?oldal={page}&tipus={t_type}&miszerint={sort}&hogyan={seq}&mire={pattern}&miben={where}"
     )
     DETAIL_PATTERN = TORRENTS_BASE + "?action=details&id={id}"
     DOWNLOAD_LINK = "https://ncore.pro/torrents.php?action=download&id={id}&key={key}"

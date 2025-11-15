@@ -1,18 +1,17 @@
 import os
-from typing import Dict, Optional, Any, Generator, Union
+from typing import Any, Dict, Generator, Optional, Union
 
 import httpx
 
-from ncoreparser.data import URLs, SearchParamType, SearchParamWhere, ParamSort, ParamSeq
+from ncoreparser.data import ParamSeq, ParamSort, SearchParamType, SearchParamWhere, URLs
 from ncoreparser.error import NcoreConnectionError, NcoreCredentialError, NcoreDownloadError
-from ncoreparser.parser import TorrentsPageParser, TorrenDetailParser, RssParser, ActivityParser, RecommendedParser
-from ncoreparser.util import Size, check_login, extract_cookies_from_client, set_cookies_to_client
+from ncoreparser.parser import ActivityParser, RecommendedParser, RssParser, TorrenDetailParser, TorrentsPageParser
 from ncoreparser.torrent import Torrent
 from ncoreparser.types import SearchResult
+from ncoreparser.util import Size, check_login, extract_cookies_from_client, set_cookies_to_client
 
 
 class Client:
-    # pylint: disable=too-many-instance-attributes
     def __init__(self, timeout: int = 1, cookies: Optional[Dict[str, str]] = None) -> None:
         self._client = httpx.Client(
             headers={"User-Agent": "python ncoreparser"}, timeout=timeout, follow_redirects=True
@@ -35,7 +34,7 @@ class Client:
             if "login.php" in str(r.url) or "<title>nCore</title>" in r.text:
                 return False
             return True
-        except Exception:  # pylint: disable=broad-except
+        except Exception:
             return False
 
     def login(self, username: str, password: str, twofactorcode: str = "") -> Dict[str, str]:
@@ -66,7 +65,6 @@ class Client:
         return extract_cookies_from_client(self._client, self._allowed_cookies)
 
     @check_login
-    # pylint: disable=too-many-arguments, too-many-positional-arguments
     def search(
         self,
         pattern: str,

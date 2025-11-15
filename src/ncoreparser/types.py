@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+
 from ncoreparser.torrent import Torrent
 
 
