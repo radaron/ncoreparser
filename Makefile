@@ -27,7 +27,7 @@ manual-test:
 		--passw "${NCORE_PASSWORD}" --rss-feed "${RSS_URL}"
 
 git-tag:
-	git tag v$(uv version -s)
+	git tag v$(uv version --short)
 	git push --tags
 
 bump-version:
