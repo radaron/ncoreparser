@@ -6,9 +6,9 @@ install:
 	uv sync --dev
 
 lint:
-	uv run ruff check src/ncoreparser
+	uv run ruff check .
 	uv run ruff check --select I .
-	uv run mypy src/ncoreparser
+	uv run ty check .
 
 format:
 	uv run ruff check --select I --fix .

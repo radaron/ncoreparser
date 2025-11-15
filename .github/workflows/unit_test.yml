@@ -19,6 +19,7 @@ jobs:
       run: |
         uv run --python ${{ matrix.python-version }} ruff check .
         uv run --python ${{ matrix.python-version }} ruff check --select I .
+        uv run --python ${{ matrix.python-version }} ty check .
     - name: Perform tests
       run: |
         uv run --python ${{ matrix.python-version }} pytest

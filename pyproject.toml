@@ -1,6 +1,6 @@
 [project]
 name = "ncoreparser"
-version = "4.5.2"
+version = "4.5.3"
 description = "Package to download from ncore.pro"
 authors = [
   { name="Aron Radics", email="aron.radics.jozsef@gmail.com" }
@@ -16,7 +16,7 @@ requires-python = ">=3.9"
 dev = [
   "pytest",
   "ruff",
-  "mypy",
+  "ty",
 ]
 
 [project.urls]
@@ -29,7 +29,18 @@ build-backend = "uv_build"
 [tool.ruff]
 line-length = 120
 
-[tool.mypy]
-disallow_untyped_calls = true
-disallow_incomplete_defs = true
-disallow_untyped_defs = true
+[tool.ty.rules]
+unresolved-reference = "error"
+unresolved-import = "error"
+unresolved-attribute = "error"
+invalid-assignment = "error"
+invalid-argument-type = "error"
+invalid-return-type = "error"
+missing-argument = "error"
+
+possibly-missing-attribute = "error"
+possibly-missing-import = "error"
+possibly-unresolved-reference = "error"
+
+redundant-cast = "error"
+undefined-reveal = "error"

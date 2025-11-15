@@ -39,7 +39,7 @@ class TorrentsPageParser:
         sizes = self.size_pattern.findall(data)
         seed = self.seeders_pattern.findall(data)
         leech = self.leechers_pattern.findall(data)
-        ids: tuple[Any, ...] = ()
+
         if len(types) != 0 and len(types) == len(ids_and_names) == len(dates_and_times) == len(sizes) == len(
             seed
         ) == len(leech):
@@ -49,6 +49,8 @@ class TorrentsPageParser:
         else:
             if not self.not_found_pattern.search(data):
                 raise NcoreParserError(f"Error while parse download items in {self.__class__.__name__}.")
+            return
+
         for i, id in enumerate(ids):
             yield {
                 "id": id,
