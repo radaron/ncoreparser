@@ -9,4 +9,3 @@ ncoreparser.egg-info/
 .env.sh
 .env
 *.torrent
-.tox*

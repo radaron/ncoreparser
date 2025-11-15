@@ -86,7 +86,7 @@ def parse_datetime(date: str, time: str) -> datetime.datetime:
     return datetime.datetime.strptime(f"{date}_{time}", "%Y-%m-%d_%H:%M:%S")
 
 
-def extract_cookies_from_client(client: Any, allowed_cookies: list[str], domain: str = URLs.COOKIE_DOMAIN.value) -> Dict[str, str]:
+def extract_cookies_from_client(client: Any, allowed_cookies: list[str]) -> Dict[str, str]:
     cookies_dict = {}
     for cookie in client.cookies.jar:
         if cookie.name in allowed_cookies:
@@ -94,7 +94,9 @@ def extract_cookies_from_client(client: Any, allowed_cookies: list[str], domain:
     return cookies_dict
 
 
-def set_cookies_to_client(client: Any, cookies: Dict[str, str], allowed_cookies: list[str], domain: str = URLs.COOKIE_DOMAIN.value) -> None:
+def set_cookies_to_client(
+    client: Any, cookies: Dict[str, str], allowed_cookies: list[str], domain: str = URLs.COOKIE_DOMAIN.value
+) -> None:
     for name, value in cookies.items():
         if name in allowed_cookies:
             client.cookies.set(name, value, domain=domain)
