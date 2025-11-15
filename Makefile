@@ -29,3 +29,6 @@ manual-test:
 git-tag:
 	git tag v$(uv version -s)
 	git push --tags
+
+bump-version:
+	uv version --bump minor
