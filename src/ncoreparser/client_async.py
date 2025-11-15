@@ -1,10 +1,10 @@
 # pylint: disable=duplicate-code
 
 import os
+import sys
 from typing import Dict, Optional
 
 import httpx
-from typing_extensions import Any, AsyncGenerator, Union  # pylint: disable=no-name-in-module
 
 from ncoreparser.data import URLs, SearchParamType, SearchParamWhere, ParamSort, ParamSeq
 from ncoreparser.error import NcoreConnectionError, NcoreCredentialError, NcoreDownloadError
@@ -12,6 +12,10 @@ from ncoreparser.parser import TorrentsPageParser, TorrenDetailParser, RssParser
 from ncoreparser.util import Size, check_login, extract_cookies_from_client, set_cookies_to_client
 from ncoreparser.torrent import Torrent
 from ncoreparser.types import SearchResult
+if sys.version_info >= (3, 10):
+    from typing import Any, AsyncGenerator, Union
+else:
+    from typing_extensions import Any, AsyncGenerator, Union  # pylint: disable=no-name-in-module
 
 
 class AsyncClient:
