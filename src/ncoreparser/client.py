@@ -10,6 +10,7 @@ from ncoreparser.parser import TorrentsPageParser, TorrenDetailParser, RssParser
 from ncoreparser.util import Size, check_login, extract_cookies_from_client, set_cookies_to_client
 from ncoreparser.torrent import Torrent
 from ncoreparser.types import SearchResult
+
 if sys.version_info >= (3, 10):
     from typing import Any, Generator, Union
 else:
