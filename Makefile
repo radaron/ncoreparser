@@ -9,9 +9,6 @@ lint:
 	uv run pylint src/ncoreparser
 	uv run mypy src/ncoreparser
 
-check-format:
-	uv run black --check .
-
 format:
 	uv run black .
 
