@@ -6,8 +6,8 @@ install:
 	uv sync --dev
 
 lint:
-	uv run pylint ncoreparser
-	uv run mypy ncoreparser
+	uv run pylint src/ncoreparser
+	uv run mypy src/ncoreparser
 
 check-format:
 	uv run black --check .
