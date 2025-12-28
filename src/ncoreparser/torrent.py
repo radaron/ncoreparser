@@ -11,7 +11,7 @@ def get_torrent_page_url(torrent_id: str) -> str:
 
 class Torrent:
     def __init__(
-        self, id: str, title: str, key: str, size: Size, type: str, date: str, seed: str, leech: str, **params: Any
+        self, id: str, title: str, key: str, size: Size, type: str, date: str, seed: str, leech: str, poster: str, **params: Any
     ) -> None:
         self._details = {
             "id": id,
@@ -24,6 +24,7 @@ class Torrent:
             "leech": leech,
             "download": URLs.DOWNLOAD_LINK.value.format(id=id, key=key),
             "url": get_torrent_page_url(torrent_id=id),
+            "poster": poster,
         }
         self._details.update(params)
 
